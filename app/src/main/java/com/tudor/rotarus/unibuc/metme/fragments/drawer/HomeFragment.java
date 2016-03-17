@@ -1,8 +1,8 @@
-package com.tudor.rotarus.unibuc.metme.drawerFragments;
+package com.tudor.rotarus.unibuc.metme.fragments.drawer;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,10 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tudor.rotarus.unibuc.metme.LoginActivity;
 import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
-import com.tudor.rotarus.unibuc.metme.pojos.TestGetBody;
+import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
+import com.tudor.rotarus.unibuc.metme.pojos.get.TestGetBody;
 
 import retrofit.Call;
 import retrofit.Callback;

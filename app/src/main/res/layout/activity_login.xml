@@ -8,7 +8,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:background="@color/colorPrimary"
-    tools:context="com.tudor.rotarus.unibuc.metme.LoginActivity">
+    tools:context="com.tudor.rotarus.unibuc.metme.activities.login.LoginActivity">
 
     <!--<TextView-->
         <!--android:id="@+id/activity_login_textView_title"-->
@@ -60,6 +60,8 @@
             android:inputType="phone"
             android:hint="@string/prefix"
             android:textSize="@dimen/text_big"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
             android:paddingTop="@dimen/edit_text_padding_vertical"
             android:paddingBottom="@dimen/edit_text_padding_vertical"
             android:paddingLeft="@dimen/edit_text_padding_horizontal"
@@ -74,10 +76,12 @@
         android:layout_marginTop="@dimen/login_vertical_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="phone"
+        android:inputType="number"
         android:background="@color/editTextField"
         android:hint="@string/phoneNumber"
         android:textSize="@dimen/text_big"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
         android:paddingTop="@dimen/edit_text_padding_vertical"
         android:paddingBottom="@dimen/edit_text_padding_vertical"
         android:paddingLeft="@dimen/edit_text_padding_horizontal"

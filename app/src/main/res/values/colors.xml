@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryLight">#0288D1</color>
-    <color name="colorPrimary">#0277BD</color>
-    <color name="colorPrimaryDark">#01579B</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryLight">#455A64</color>
+    <color name="colorPrimary">#37474F</color>
+    <color name="colorPrimaryDark">#263238</color>
+    <color name="colorAccent">#FF5722</color>
     <color name="editTextField">#E1F5FE</color>
-    <color name="btn">#0288D1</color>
+    <color name="btn">#455A64</color>
 </resources>

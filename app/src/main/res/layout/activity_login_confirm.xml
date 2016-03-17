@@ -8,7 +8,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:background="@color/colorPrimary"
-    tools:context="com.tudor.rotarus.unibuc.metme.LoginConfirmActivity">
+    tools:context="com.tudor.rotarus.unibuc.metme.activities.login.LoginConfirmActivity">
 
     <TextView
         android:id="@+id/activity_login_confirm_textView_instructions"
@@ -29,6 +29,10 @@
         android:background="@color/editTextField"
         android:hint="@string/code"
         android:textSize="@dimen/text_big"
+        android:inputType="number"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
+        android:maxLength="4"
         android:paddingTop="@dimen/edit_text_padding_vertical"
         android:paddingBottom="@dimen/edit_text_padding_vertical"
         android:paddingLeft="@dimen/edit_text_padding_horizontal"
@@ -46,7 +50,7 @@
         android:textColor="@color/editTextField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/cont"
+        android:text="@string/fin"
         android:paddingLeft="@dimen/login_btn_horizontal_padding"
         android:paddingRight="@dimen/login_btn_horizontal_padding"
         android:layout_centerHorizontal="true" />

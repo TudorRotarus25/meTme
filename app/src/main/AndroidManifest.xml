@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tudor.rotarus.unibuc.metme" >
 
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:name=".MyApplication"
@@ -12,19 +14,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.login.LoginActivity"
             android:theme="@style/FullscreenAppTheme" >
         </activity>
         <activity
-            android:name=".LoginNameActivity"
+            android:name=".activities.login.LoginNameActivity"
             android:theme="@style/FullscreenAppTheme" >
         </activity>
         <activity
-            android:name=".LoginConfirmActivity"
+            android:name=".activities.login.LoginConfirmActivity"
             android:theme="@style/FullscreenAppTheme" >
         </activity>
         <activity
-            android:name=".NavigationDrawerActivity"
+            android:name=".activities.NavigationDrawerActivity"
             android:label="@string/title_activity_navigation_drawer"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
@@ -33,8 +35,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddMeetingActivity" >
+        <activity android:name=".activities.AddMeetingActivity" >
         </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_api_key"/>
     </application>
 
 </manifest>

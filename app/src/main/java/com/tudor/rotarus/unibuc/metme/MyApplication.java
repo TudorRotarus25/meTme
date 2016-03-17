@@ -9,6 +9,8 @@ import com.tudor.rotarus.unibuc.metme.rest.RestClient;
  */
 public class MyApplication extends Application {
 
+    public static final String METME_SHARED_PREFERENCES = "METME_SHARED_PREFERENCES_FIRST_NAME";
+
     private RestClient restClient;
 
     @Override

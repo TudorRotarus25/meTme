@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_navigation_drawer"
-    tools:context="com.tudor.rotarus.unibuc.metme.NavigationDrawerActivity">
+    tools:context="com.tudor.rotarus.unibuc.metme.activities.NavigationDrawerActivity">
 
     <FrameLayout
         android:id="@+id/navigation_drawer_fragment_container"

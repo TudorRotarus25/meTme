@@ -1,11 +1,13 @@
-package com.tudor.rotarus.unibuc.metme;
+package com.tudor.rotarus.unibuc.metme.activities.login;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.tudor.rotarus.unibuc.metme.R;
 
 public class LoginNameActivity extends AppCompatActivity {
 
@@ -24,6 +26,16 @@ public class LoginNameActivity extends AppCompatActivity {
         initLayout();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
     private void initLayout() {
         firstNameEditText = (EditText) findViewById(R.id.activity_login_name_editText_firstName);
         lastNameEditText = (EditText) findViewById(R.id.activity_login_name_editText_lastName);
@@ -32,7 +44,6 @@ public class LoginNameActivity extends AppCompatActivity {
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if(firstNameEditText.isDirty() && lastNameEditText.isDirty()){
                 String firstName = firstNameEditText.getText().toString();
                 String lastName = lastNameEditText.getText().toString();
 
@@ -41,8 +52,14 @@ public class LoginNameActivity extends AppCompatActivity {
                     intent.putExtra(LOGIN_EXTRA_FIRST_NAME, firstName);
                     intent.putExtra(LOGIN_EXTRA_LAST_NAME, lastName);
                     startActivity(intent);
+                } else {
+                    if(firstName.isEmpty()){
+                        firstNameEditText.setError("First name required!");
+                    }
+                    if (lastName.isEmpty()){
+                        lastNameEditText.setError("Last name required");
+                    }
                 }
-            }
             }
         });
     }

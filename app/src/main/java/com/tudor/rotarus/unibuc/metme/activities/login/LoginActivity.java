@@ -1,17 +1,19 @@
-package com.tudor.rotarus.unibuc.metme;
+package com.tudor.rotarus.unibuc.metme.activities.login;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.tudor.rotarus.unibuc.metme.pojos.CountryGetBody;
+import com.tudor.rotarus.unibuc.metme.MyApplication;
+import com.tudor.rotarus.unibuc.metme.R;
+import com.tudor.rotarus.unibuc.metme.pojos.get.CountryGetBody;
 
 import java.util.Locale;
 
@@ -29,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
     String firstName;
     String lastName;
+    String phoneNumber;
 
     MyApplication app;
 
@@ -58,13 +61,62 @@ public class LoginActivity extends AppCompatActivity {
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("prefix:", "/" + prefixEditText.getText().toString() + "/");
-                Log.i("phone_number:", "/" + phoneNumberEditText.getText().toString() + "/");
-                Intent intent = new Intent(LoginActivity.this, LoginConfirmActivity.class);
-                intent.putExtra(LOGIN_EXTRA_PHONE_NUMBER, prefixEditText.getText().toString() + phoneNumberEditText.getText().toString());
-                startActivity(intent);
+                String prefix = prefixEditText.getText().toString();
+                phoneNumber = phoneNumberEditText.getText().toString();
+                if (!prefix.isEmpty() && !phoneNumber.isEmpty() && phoneNumber.matches("[0-9]+")) {
+                    phoneNumber = prefix + phoneNumber;
+
+                    createUser(phoneNumber, firstName, lastName);
+                } else {
+                    if (prefix.isEmpty()) {
+                        prefixEditText.setError("Country prefix is required");
+                    }
+                    if (phoneNumber.isEmpty()) {
+                        phoneNumberEditText.setError("Phone number is required");
+                    } else if (!phoneNumber.matches("[0-9]+")) {
+                        phoneNumberEditText.setError("Not a valid phone number");
+                    }
+                }
             }
         });
+    }
+
+    private void writeUserInSharedPreferences() {
+        SharedPreferences.Editor editor = getSharedPreferences(MyApplication.METME_SHARED_PREFERENCES, MODE_PRIVATE).edit();
+        editor.putString("first_name", firstName);
+        editor.putString("last_name", lastName);
+        editor.putString("phone_number", phoneNumber);
+        editor.commit();
+    }
+
+    private void createUser(final String phoneNumber, final String firstName, final String lastName) {
+
+        Call<Void> userPostCall = app.getRestClient().getApiService().USER_POST_BODY_CALL(phoneNumber, firstName, lastName);
+        userPostCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Response<Void> response, Retrofit retrofit) {
+                if(response != null){
+                    if(response.code() == 200) {
+                        writeUserInSharedPreferences();
+
+                        Intent intent = new Intent(LoginActivity.this, LoginConfirmActivity.class);
+                        intent.putExtra(LOGIN_EXTRA_PHONE_NUMBER, LoginActivity.this.phoneNumber);
+                        startActivity(intent);
+
+                    } else {
+                        Log.e("BE error", response.code() + " - " + response.message());
+                    }
+                } else {
+                    Log.e("BE error", "Empty response");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.e("BE error", "Call failed");
+            }
+        });
+
     }
 
     public void populateCountryFields(){
