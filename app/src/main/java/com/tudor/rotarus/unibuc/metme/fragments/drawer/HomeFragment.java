@@ -41,23 +41,6 @@ public class HomeFragment extends Fragment {
 
         initLayout(view);
 
-        Call<TestGetBody> testCall = app.getRestClient().getApiService().TEST_GET_BODY_CALL();
-        testCall.enqueue(new Callback<TestGetBody>() {
-            @Override
-            public void onResponse(Response<TestGetBody> response, Retrofit retrofit) {
-                if (response.body() != null) {
-                    meetingNameTextView.setText(response.body().getOutput());
-                } else {
-                    Log.e("My parsing error", "parsing error!");
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.e("Call error", t.getMessage());
-            }
-        });
-
         return view;
     }
 

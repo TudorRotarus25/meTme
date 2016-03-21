@@ -4,6 +4,8 @@ import com.tudor.rotarus.unibuc.metme.pojos.post.ActivateUserPostBody;
 import com.tudor.rotarus.unibuc.metme.pojos.get.CountryGetBody;
 import com.tudor.rotarus.unibuc.metme.pojos.get.TestGetBody;
 
+import java.util.ArrayList;
+
 import retrofit.Call;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
@@ -16,9 +18,6 @@ import retrofit.http.Query;
  */
 public interface RestAPI {
 
-    @GET("test.php")
-    Call<TestGetBody> TEST_GET_BODY_CALL();
-
     @GET("countries.php")
     Call<CountryGetBody> COUNTRY_GET_BODY_CALL(@Query("iso") String iso);
 
@@ -29,4 +28,8 @@ public interface RestAPI {
     @FormUrlEncoded
     @POST("activate_user.php")
     Call<ActivateUserPostBody> ACTIVATE_USER_POST_BODY(@Field("phone_number") String phoneNumber, @Field("sms_code") String smsCode);
+
+    @FormUrlEncoded
+    @POST
+    Call<String> MEETING_POST_BODY_CALL(@Field("name") String name, @Field("time") String time, @Field("place_lat") Double placeLat, @Field("place_lon") Double placeLon, @Field("place_name") String placeName, @Field("place_google_name") String placeGoogleName, @Field("transportation_method") int transportationMethod, @Field("author_phone_number") String authorPhoneNumber, @Field("members") ArrayList<Integer> members);
 }

@@ -36,7 +36,7 @@
         android:paddingBottom="@dimen/edit_text_padding_vertical"
         android:paddingLeft="@dimen/edit_text_padding_horizontal"
         android:paddingRight="@dimen/edit_text_padding_horizontal"
-        android:capitalize="words"/>
+        android:inputType="textCapWords"/>
 
     <EditText
         android:id="@+id/activity_login_name_editText_lastName"
@@ -54,7 +54,7 @@
         android:paddingRight="@dimen/edit_text_padding_horizontal"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:capitalize="words"/>
+        android:inputType="textCapWords"/>
 
     <Button
         android:id="@+id/activity_login_name_button_ok"

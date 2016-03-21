@@ -10,15 +10,6 @@
     android:background="@color/colorPrimary"
     tools:context="com.tudor.rotarus.unibuc.metme.activities.login.LoginActivity">
 
-    <!--<TextView-->
-        <!--android:id="@+id/activity_login_textView_title"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:gravity="center"-->
-        <!--android:textColor="@color/editTextField"-->
-        <!--android:textSize="@dimen/loginTitleText"-->
-        <!--android:text="@string/app_name"/>-->
-
     <TextView
         android:id="@+id/activity_login_textView_instructions"
         android:layout_above="@+id/activity_login_linearLayout_country"

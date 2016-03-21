@@ -26,4 +26,8 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_meeting_location_instruct">Enter the location of the meeting</string>
+    <string name="add_meeting_name_instr">Meeting name</string>
+    <string name="add_meeting_add_people_inst">Add people to the meeting</string>
+    <string name="add_meeting_loc_alias_instr">Add location alias (optional)</string>
 </resources>

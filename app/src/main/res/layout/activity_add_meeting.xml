@@ -1,30 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context="com.tudor.rotarus.unibuc.metme.activities.AddMeetingActivity">
 
+    <EditText android:id="@+id/activity_add_meeting_title_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/add_meeting_vertical_margin"
+        android:layout_marginBottom="@dimen/add_meeting_vertical_margin"
+        android:hint="@string/add_meeting_name_instr"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
+        android:inputType="textCapSentences"/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
     <LinearLayout android:id="@+id/activity_add_meeting_place_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginTop="@dimen/add_meeting_vertical_margin"
+        android:layout_marginBottom="@dimen/add_meeting_vertical_margin"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <ImageView android:id="@+id/activity_add_meeting_place_icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:tint="@color/colorPrimary"
-            android:src="@mipmap/ic_location_on_black_36dp"/>
+            android:src="@mipmap/ic_location_on_black_24dp"/>
 
-        <TextView android:id="@+id/activity_add_meeting_place_text"
-            android:text="Sugi pula!"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:elegantTextHeight="true"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/add_meeting_horizontal_margin"
+            android:layout_marginRight="@dimen/add_meeting_horizontal_margin"
+            android:orientation="vertical"
+            android:layout_weight="9">
+
+                <TextView android:id="@+id/activity_add_meeting_place_text"
+                    android:text="@string/add_meeting_location_instruct"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/add_meeting_time_vertical_margin"
+                    android:layout_marginBottom="@dimen/add_meeting_time_between_vertical_margin"
+                    android:layout_marginLeft="@dimen/add_meeting_horizontal_margin"
+                    android:layout_marginRight="@dimen/add_meeting_horizontal_margin"/>
+
+                <EditText android:id="@+id/activity_add_meeting_place_alias_editText"
+                    android:hint="@string/add_meeting_loc_alias_instr"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapSentences"
+                    android:textSize="@dimen/text_primary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/add_meeting_time_between_vertical_margin"
+                    android:layout_marginBottom="@dimen/add_meeting_time_vertical_margin"
+                    android:layout_marginLeft="@dimen/add_meeting_horizontal_margin"
+                    android:layout_marginRight="@dimen/add_meeting_horizontal_margin"/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout android:id="@+id/activity_add_meeting_time_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/add_meeting_vertical_margin"
+        android:layout_marginBottom="@dimen/add_meeting_vertical_margin"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tint="@color/colorPrimary"
+            android:src="@drawable/ic_access_time_black_24dp"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/add_meeting_horizontal_margin"
+            android:layout_marginRight="@dimen/add_meeting_horizontal_margin"
+            android:orientation="vertical"
+            android:layout_weight="9">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/add_meeting_time_vertical_margin"
+                android:layout_marginBottom="@dimen/add_meeting_time_between_vertical_margin"
+                android:orientation="horizontal">
+
+                <TextView android:id="@+id/activity_add_meeting_start_date_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/accept"
+                    android:layout_weight="2"/>
+
+                <TextView android:id="@+id/activity_add_meeting_start_time_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/accept"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/add_meeting_time_between_vertical_margin"
+                android:layout_marginBottom="@dimen/add_meeting_time_vertical_margin"
+                android:orientation="horizontal">
+
+                <TextView android:id="@+id/activity_add_meeting_end_date_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="@string/accept"/>
+
+                <TextView android:id="@+id/activity_add_meeting_end_time_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/accept"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout android:id="@+id/activity_add_meeting_notification_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/add_meeting_vertical_margin"
+        android:layout_marginBottom="@dimen/add_meeting_vertical_margin"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tint="@color/colorPrimary"
+            android:src="@drawable/ic_notifications_black_24dp"/>
+
+        <TextView android:id="@+id/activity_add_meeting_notification_text"
+            android:text="@string/accept"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/add_meeting_horizontal_margin"
+            android:layout_marginRight="@dimen/add_meeting_horizontal_margin"
+            android:layout_weight="9"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout android:id="@+id/activity_add_meeting_add_people_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/add_meeting_vertical_margin"
+        android:layout_marginBottom="@dimen/add_meeting_vertical_margin"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tint="@color/colorPrimary"
+            android:src="@drawable/ic_add_circle_black_24dp"/>
+
+        <TextView android:id="@+id/activity_add_meeting_add_people_text"
+            android:text="@string/add_meeting_add_people_inst"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/add_meeting_horizontal_margin"
+            android:layout_marginRight="@dimen/add_meeting_horizontal_margin"
             android:layout_weight="9"/>
 
     </LinearLayout>
