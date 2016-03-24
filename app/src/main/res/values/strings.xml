@@ -3,19 +3,19 @@
 
     <string name="google_api_key">AIzaSyBj8EYsjc2JE7AeGmrH_pzFWuF34Z-nTyg</string>
 
-    <string name="instructions">Now please enter your phone number...</string>
-    <string name="country">Country...</string>
-    <string name="phoneNumber">Phone number...</string>
+    <string name="instructions">Now please enter your phone number…</string>
+    <string name="country">Country…</string>
+    <string name="phoneNumber">Phone number…</string>
     <string name="prefix">Prefix</string>
     <string name="login">Login</string>
     <string name="cont">Continue</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="first_name">First name...</string>
-    <string name="last_name">Last name...</string>
+    <string name="first_name">First name…</string>
+    <string name="last_name">Last name…</string>
     <string name="fin">Finish</string>
-    <string name="login_name_instructions">Hello there! \n Please tell us your name to continue...</string>
-    <string name="code">Code...</string>
-    <string name="login_confirm_instructions">We will send you a text message with a code. Please insert it manually if we fail to detect it automatically...</string>
+    <string name="login_name_instructions">Hello there! \n Please tell us your name to continue…</string>
+    <string name="code">Code…</string>
+    <string name="login_confirm_instructions">We will send you a text message with a code. Please insert it manually if we fail to detect it automatically…</string>
     <string name="next_meeting">Next meeting</string>
     <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>
 
@@ -30,4 +30,10 @@
     <string name="add_meeting_name_instr">Meeting name</string>
     <string name="add_meeting_add_people_inst">Add people to the meeting</string>
     <string name="add_meeting_loc_alias_instr">Add location alias (optional)</string>
+    <string name="notification_text">15 minutes before departure</string>
+
+    <string name="add_meeting_notification_dialog_title"> Remind me with… </string>
+    <string name="add_meeting_transport_dialog_title"> Transportation method… </string>
+    <string name="create">Create</string>
+    <string name="car">Car</string>
 </resources>

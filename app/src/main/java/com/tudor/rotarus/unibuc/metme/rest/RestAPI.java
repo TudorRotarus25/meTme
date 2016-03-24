@@ -30,6 +30,6 @@ public interface RestAPI {
     Call<ActivateUserPostBody> ACTIVATE_USER_POST_BODY(@Field("phone_number") String phoneNumber, @Field("sms_code") String smsCode);
 
     @FormUrlEncoded
-    @POST
-    Call<String> MEETING_POST_BODY_CALL(@Field("name") String name, @Field("time") String time, @Field("place_lat") Double placeLat, @Field("place_lon") Double placeLon, @Field("place_name") String placeName, @Field("place_google_name") String placeGoogleName, @Field("transportation_method") int transportationMethod, @Field("author_phone_number") String authorPhoneNumber, @Field("members") ArrayList<Integer> members);
+    @POST("meetings.php")
+    Call<Void> MEETING_POST_BODY_CALL(@Field("name") String name, @Field("from_time") String fromTime, @Field("to_time") String toTime, @Field("notify_time") int notifyTime, @Field("place_lat") Double placeLat, @Field("place_lon") Double placeLon, @Field("place_name") String placeName, @Field("place_address") String placeAddress, @Field("transportation_method") int transportationMethod, @Field("author_phone_number") String authorPhoneNumber, @Field("members") ArrayList<Integer> members);
 }

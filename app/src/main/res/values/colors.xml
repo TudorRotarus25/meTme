@@ -6,4 +6,5 @@
     <color name="colorAccent">#FF5722</color>
     <color name="editTextField">#E1F5FE</color>
     <color name="btn">#455A64</color>
+    <color name="fab_icon_tint">#fff</color>
 </resources>

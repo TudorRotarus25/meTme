@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="notification_choices">
+        <item>5 minutes before departure</item>
+        <item>15 minutes before departure</item>
+        <item>30 minutes before departure</item>
+        <item>Right on the departure time</item>
+    </string-array>
+
+    <string-array name="notification_value_choices">
+        <item>5</item>
+        <item>15</item>
+        <item>30</item>
+        <item>0</item>
+    </string-array>
+
+    <string-array name="transport_choices">
+        <item>CAR</item>
+        <item>PUBLIC TRANSPORT</item>
+        <item>ON FOOT</item>
+        <item>TAXI</item>
+    </string-array>
+</resources>
