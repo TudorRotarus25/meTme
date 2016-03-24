@@ -2,6 +2,7 @@ package com.tudor.rotarus.unibuc.metme.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.AvoidXfermode;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -13,14 +14,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
 import com.tudor.rotarus.unibuc.metme.fragments.drawer.AllMeetingsFragment;
+import com.tudor.rotarus.unibuc.metme.fragments.drawer.FriendsFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.drawer.HomeFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.drawer.ProfileFragment;
 
@@ -28,6 +32,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "NavigationDrawerAct";
+    private MyApplication app = (MyApplication) getApplication();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +70,19 @@ public class NavigationDrawerActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
+//        drawer.setDrawerTitle(Gravity.LEFT, prefs.getString("first_name", "") + " " + prefs.getString("last_name", ""));
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         displayView(R.id.nav_home);
+
+        View header = navigationView.getHeaderView(0);
+
+        SharedPreferences prefs = getSharedPreferences(app.METME_SHARED_PREFERENCES, MODE_PRIVATE);
+        TextView drawerTitleTextView = (TextView) header.findViewById(R.id.drawer_nav_header_title);
+        drawerTitleTextView.setText(prefs.getString("first_name", "") + " " + prefs.getString("last_name", ""));
     }
 
     @Override
@@ -125,6 +137,10 @@ public class NavigationDrawerActivity extends AppCompatActivity
             case R.id.nav_all_meetings:
                 fragment = new AllMeetingsFragment();
                 title = "All meetings";
+                break;
+            case R.id.nav_friends:
+                fragment = new FriendsFragment();
+                title = "Friends";
                 break;
             case R.id.nav_profile:
                 fragment = new ProfileFragment();
