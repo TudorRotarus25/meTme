@@ -1,4 +1,4 @@
-package com.tudor.rotarus.unibuc.metme.fragments.drawer;
+package com.tudor.rotarus.unibuc.metme.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

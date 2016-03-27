@@ -2,7 +2,6 @@ package com.tudor.rotarus.unibuc.metme.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.AvoidXfermode;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -14,7 +13,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,10 +21,10 @@ import android.widget.TextView;
 import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
-import com.tudor.rotarus.unibuc.metme.fragments.drawer.AllMeetingsFragment;
-import com.tudor.rotarus.unibuc.metme.fragments.drawer.FriendsFragment;
-import com.tudor.rotarus.unibuc.metme.fragments.drawer.HomeFragment;
-import com.tudor.rotarus.unibuc.metme.fragments.drawer.ProfileFragment;
+import com.tudor.rotarus.unibuc.metme.fragments.AllMeetingsFragment;
+import com.tudor.rotarus.unibuc.metme.fragments.FriendsFragment;
+import com.tudor.rotarus.unibuc.metme.fragments.HomeFragment;
+import com.tudor.rotarus.unibuc.metme.fragments.ProfileFragment;
 
 public class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

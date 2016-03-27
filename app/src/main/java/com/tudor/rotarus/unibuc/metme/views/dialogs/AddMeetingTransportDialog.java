@@ -1,4 +1,4 @@
-package com.tudor.rotarus.unibuc.metme.fragments.dialogs;
+package com.tudor.rotarus.unibuc.metme.views.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

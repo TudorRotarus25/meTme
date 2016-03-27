@@ -27,8 +27,8 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
-import com.tudor.rotarus.unibuc.metme.fragments.dialogs.AddMeetingNotificationDialog;
-import com.tudor.rotarus.unibuc.metme.fragments.dialogs.AddMeetingTransportDialog;
+import com.tudor.rotarus.unibuc.metme.views.dialogs.AddMeetingNotificationDialog;
+import com.tudor.rotarus.unibuc.metme.views.dialogs.AddMeetingTransportDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

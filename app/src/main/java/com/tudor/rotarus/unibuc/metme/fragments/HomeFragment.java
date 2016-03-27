@@ -1,4 +1,4 @@
-package com.tudor.rotarus.unibuc.metme.fragments.drawer;
+package com.tudor.rotarus.unibuc.metme.fragments;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
