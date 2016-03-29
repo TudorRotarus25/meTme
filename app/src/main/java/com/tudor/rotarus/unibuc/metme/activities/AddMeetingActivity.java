@@ -92,8 +92,8 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
                 locationName = locationAlias;
             }
 
-            // TODO: add members
-            Call<Void> createMeetingCall = app.getRestClient().getApiService().MEETING_POST_BODY_CALL(name, callDateTimeFormatter.format(fromTime.getTime()), callDateTimeFormatter.format(toTime.getTime()), notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, getUserPhoneNumber(), new ArrayList<Integer>());
+            // TODO: add members, hardcoded type
+            Call<Void> createMeetingCall = app.getRestClient().getApiService().MEETING_POST_BODY_CALL(name, callDateTimeFormatter.format(fromTime.getTime()), callDateTimeFormatter.format(toTime.getTime()), notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, getUserPhoneNumber(), 15, new ArrayList<Integer>());
             createMeetingCall.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Response<Void> response, Retrofit retrofit) {

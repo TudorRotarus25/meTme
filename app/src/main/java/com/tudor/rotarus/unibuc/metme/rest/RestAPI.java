@@ -1,5 +1,6 @@
 package com.tudor.rotarus.unibuc.metme.rest;
 
+import com.tudor.rotarus.unibuc.metme.pojos.get.MeetingsListGetBody;
 import com.tudor.rotarus.unibuc.metme.pojos.post.ActivateUserPostBody;
 import com.tudor.rotarus.unibuc.metme.pojos.get.CountryGetBody;
 import com.tudor.rotarus.unibuc.metme.pojos.get.TestGetBody;
@@ -31,5 +32,9 @@ public interface RestAPI {
 
     @FormUrlEncoded
     @POST("meetings.php")
-    Call<Void> MEETING_POST_BODY_CALL(@Field("name") String name, @Field("from_time") String fromTime, @Field("to_time") String toTime, @Field("notify_time") int notifyTime, @Field("place_lat") Double placeLat, @Field("place_lon") Double placeLon, @Field("place_name") String placeName, @Field("place_address") String placeAddress, @Field("transportation_method") int transportationMethod, @Field("author_phone_number") String authorPhoneNumber, @Field("members") ArrayList<Integer> members);
+    Call<Void> MEETING_POST_BODY_CALL(@Field("name") String name, @Field("from_time") String fromTime, @Field("to_time") String toTime, @Field("notify_time") int notifyTime, @Field("place_lat") Double placeLat, @Field("place_lon") Double placeLon, @Field("place_name") String placeName, @Field("place_address") String placeAddress, @Field("transportation_method") int transportationMethod, @Field("author_phone_number") String authorPhoneNumber, @Field("type") int type, @Field("members") ArrayList<Integer> members);
+
+    @GET("all_meetings.php")
+    Call<MeetingsListGetBody> MEETINGS_LIST_GET_BODY_CALL(@Query("phone_number") String phoneNumber);
+
 }
