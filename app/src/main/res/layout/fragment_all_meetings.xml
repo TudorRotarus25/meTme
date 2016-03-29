@@ -3,8 +3,15 @@
     android:layout_height="match_parent"
     tools:context=".fragments.AllMeetingsFragment">
 
-    <android.support.v7.widget.RecyclerView android:id="@+id/fragment_all_meetings_recyclerView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/fragment_all_meetings_swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView android:id="@+id/fragment_all_meetings_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>
