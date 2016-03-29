@@ -28,4 +28,9 @@
     <dimen name="add_meeting_vertical_margin">15dp</dimen>
     <dimen name="add_meeting_horizontal_margin">10dp</dimen>
 
+    <dimen name="list_all_meetings_vertical_margin">3dp</dimen>
+    <dimen name="list_all_meetings_horizontal_margin">5dp</dimen>
+    <dimen name="all_meetings_cardView_padding_vertical">16dp</dimen>
+    <dimen name="all_meetings_cardView_padding_horizontal">5dp</dimen>
+
 </resources>
