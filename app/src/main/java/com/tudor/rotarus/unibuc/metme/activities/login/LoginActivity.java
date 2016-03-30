@@ -6,23 +6,21 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
-import com.tudor.rotarus.unibuc.metme.pojos.get.CountryGetBody;
+import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.CountriesListener;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.LoginListener;
+import com.tudor.rotarus.unibuc.metme.pojos.requests.get.CountryGetBody;
 
 import java.util.Locale;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
-
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements LoginListener, CountriesListener{
 
     EditText countryEditText;
     EditText prefixEditText;
@@ -91,52 +89,18 @@ public class LoginActivity extends AppCompatActivity {
 
     private void createUser(final String phoneNumber, final String firstName, final String lastName) {
 
-        Call<Void> userPostCall = app.getRestClient().getApiService().USER_POST_BODY_CALL(phoneNumber, firstName, lastName);
-        userPostCall.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Response<Void> response, Retrofit retrofit) {
-                if(response != null){
-                    if(response.code() == 200) {
-                        writeUserInSharedPreferences();
-
-                        Intent intent = new Intent(LoginActivity.this, LoginConfirmActivity.class);
-                        intent.putExtra(LOGIN_EXTRA_PHONE_NUMBER, LoginActivity.this.phoneNumber);
-                        startActivity(intent);
-
-                    } else {
-                        Log.e("BE error", response.code() + " - " + response.message());
-                    }
-                } else {
-                    Log.e("BE error", "Empty response");
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.e("BE error", "Call failed");
-            }
-        });
+        NetworkManager networkManager = NetworkManager.getInstance();
+        networkManager.login(phoneNumber, firstName, lastName, this);
 
     }
 
     public void populateCountryFields(){
         String locale = getUserCountry(this);
         if(locale != null) {
-            Call<CountryGetBody> getCountryDetailsCall = app.getRestClient().getApiService().COUNTRY_GET_BODY_CALL(locale);
-            getCountryDetailsCall.enqueue(new Callback<CountryGetBody>() {
-                @Override
-                public void onResponse(Response<CountryGetBody> response, Retrofit retrofit) {
-                    if(response.body() != null){
-                        countryEditText.setText(response.body().getName());
-                        prefixEditText.setText(response.body().getPhoneCode());
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    Log.e("Call error", t.getMessage());
-                }
-            });
+            NetworkManager manager = NetworkManager.getInstance();
+            manager.populateCoutryField(locale, this);
+        } else {
+            Toast.makeText(this, "We failed to detect your country. Please insert it manually", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -156,5 +120,30 @@ public class LoginActivity extends AppCompatActivity {
         }
         catch (Exception e) { }
         return null;
+    }
+
+    @Override
+    public void onLoginSuccess() {
+        writeUserInSharedPreferences();
+
+        Intent intent = new Intent(LoginActivity.this, LoginConfirmActivity.class);
+        intent.putExtra(LOGIN_EXTRA_PHONE_NUMBER, LoginActivity.this.phoneNumber);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onLoginFailed() {
+        Toast.makeText(this, "Login failed, please try again", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCountryPopulateSuccess(CountryGetBody response) {
+        countryEditText.setText(response.getName());
+        prefixEditText.setText(response.getPhoneCode());
+    }
+
+    @Override
+    public void onCountryPopulateFailure() {
+        Toast.makeText(this, "We failed to detect your country. Please insert it manually", Toast.LENGTH_LONG).show();
     }
 }

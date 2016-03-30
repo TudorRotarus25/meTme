@@ -8,26 +8,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
-import com.tudor.rotarus.unibuc.metme.pojos.get.MeetingsListGetBody;
+import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.MeetingListListener;
+import com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingsListGetBody;
 import com.tudor.rotarus.unibuc.metme.views.adapters.AllMeetingsListAdapter;
 
-import java.util.List;
-
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
-
-public class AllMeetingsFragment extends Fragment {
+public class AllMeetingsFragment extends Fragment implements MeetingListListener {
 
     private static final String TAG = "AllMeetingsFragment";
 
@@ -85,37 +78,36 @@ public class AllMeetingsFragment extends Fragment {
 
     private void meetingListCall(final int callType) {
 
-        Call<MeetingsListGetBody> call = app.getRestClient().getApiService().MEETINGS_LIST_GET_BODY_CALL(getPhoneNumber());
-        call.enqueue(new Callback<MeetingsListGetBody>() {
-            @Override
-            public void onResponse(Response<MeetingsListGetBody> response, Retrofit retrofit) {
-                if(callType == INITIAL_CALL) {
-                    progressDialog.dismiss();
-                } else {
-                    refreshLayout.setRefreshing(false);
-                }
-
-                if (response.code() == 200 && response.body() != null) {
-                    AllMeetingsListAdapter adapter = new AllMeetingsListAdapter(response.body().getMeetings());
-                    recyclerView.setAdapter(adapter);
-
-                } else {
-                    Log.e(TAG, response.errorBody().toString());
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                progressDialog.dismiss();
-                Log.e(TAG, t.getMessage());
-                Toast.makeText(getActivity(), "Something went wrong. Please try again", Toast.LENGTH_LONG).show();
-            }
-        });
+        NetworkManager networkManager = NetworkManager.getInstance();
+        networkManager.listAllMeetings(getPhoneNumber(), callType, this);
 
     }
 
     private String getPhoneNumber() {
         SharedPreferences sp = getActivity().getSharedPreferences(app.METME_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         return sp.getString("phone_number", "");
+    }
+
+    @Override
+    public void onListAllMeetingsSuccess(MeetingsListGetBody response, final int callType) {
+        if(callType == INITIAL_CALL) {
+            progressDialog.dismiss();
+        } else {
+            refreshLayout.setRefreshing(false);
+        }
+
+        AllMeetingsListAdapter adapter = new AllMeetingsListAdapter(response.getMeetings());
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onListAllMeetingsFailed(final int callType) {
+        if(callType == INITIAL_CALL) {
+            progressDialog.dismiss();
+        } else {
+            refreshLayout.setRefreshing(false);
+        }
+
+        Toast.makeText(getActivity(), "Something went wrong. Please try again", Toast.LENGTH_LONG).show();
     }
 }

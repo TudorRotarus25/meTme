@@ -27,6 +27,8 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
+import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.CreateMeetingListener;
 import com.tudor.rotarus.unibuc.metme.views.dialogs.AddMeetingNotificationDialog;
 import com.tudor.rotarus.unibuc.metme.views.dialogs.AddMeetingTransportDialog;
 
@@ -35,12 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
-
-public class AddMeetingActivity extends AppCompatActivity implements OnConnectionFailedListener {
+public class AddMeetingActivity extends AppCompatActivity implements OnConnectionFailedListener, CreateMeetingListener{
 
     private static final String TAG = "AddMeetingActivity";
     private static final int PLACE_PICKER_REQUEST = 1;
@@ -92,23 +89,8 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
                 locationName = locationAlias;
             }
 
-            // TODO: add members, hardcoded type
-            Call<Void> createMeetingCall = app.getRestClient().getApiService().MEETING_POST_BODY_CALL(name, callDateTimeFormatter.format(fromTime.getTime()), callDateTimeFormatter.format(toTime.getTime()), notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, getUserPhoneNumber(), 15, new ArrayList<Integer>());
-            createMeetingCall.enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Response<Void> response, Retrofit retrofit) {
-                    if(response.code() == 200) {
-                        Intent intent = new Intent(AddMeetingActivity.this, NavigationDrawerActivity.class);
-                        startActivity(intent);
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    Log.e(TAG, t.getMessage().toString());
-                    Toast.makeText(AddMeetingActivity.this, "Something went wrong, please try again", Toast.LENGTH_LONG).show();
-                }
-            });
+            NetworkManager networkManager = NetworkManager.getInstance();
+            networkManager.createMeeting(name, callDateTimeFormatter.format(fromTime.getTime()), callDateTimeFormatter.format(toTime.getTime()), notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, getUserPhoneNumber(), 15, new ArrayList<Integer>(), this);
 
         } else {
             if(name.isEmpty()) {
@@ -362,5 +344,16 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
             startActivity(intent);
             return null;
         }
+    }
+
+    @Override
+    public void onCreateMeetingSuccess() {
+        Intent intent = new Intent(AddMeetingActivity.this, NavigationDrawerActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onCreateMeetingFailed() {
+        Toast.makeText(this, "Something went wrong, please try again", Toast.LENGTH_LONG).show();
     }
 }

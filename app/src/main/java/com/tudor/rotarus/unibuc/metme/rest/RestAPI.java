@@ -1,9 +1,8 @@
 package com.tudor.rotarus.unibuc.metme.rest;
 
-import com.tudor.rotarus.unibuc.metme.pojos.get.MeetingsListGetBody;
-import com.tudor.rotarus.unibuc.metme.pojos.post.ActivateUserPostBody;
-import com.tudor.rotarus.unibuc.metme.pojos.get.CountryGetBody;
-import com.tudor.rotarus.unibuc.metme.pojos.get.TestGetBody;
+import com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingsListGetBody;
+import com.tudor.rotarus.unibuc.metme.pojos.requests.post.ActivateUserPostBody;
+import com.tudor.rotarus.unibuc.metme.pojos.requests.get.CountryGetBody;
 
 import java.util.ArrayList;
 

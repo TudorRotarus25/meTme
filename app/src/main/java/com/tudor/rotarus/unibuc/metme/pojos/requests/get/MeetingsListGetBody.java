@@ -1,9 +1,7 @@
-package com.tudor.rotarus.unibuc.metme.pojos.get;
+package com.tudor.rotarus.unibuc.metme.pojos.requests.get;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Locale;
 
 /**

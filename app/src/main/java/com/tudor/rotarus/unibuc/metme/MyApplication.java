@@ -11,16 +11,16 @@ public class MyApplication extends Application {
 
     public static final String METME_SHARED_PREFERENCES = "METME_SHARED_PREFERENCES_FIRST_NAME";
 
-    private RestClient restClient;
+//    private RestClient restClient;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        restClient = new RestClient();
+//        restClient = new RestClient();
     }
 
-    public RestClient getRestClient() {
-        return restClient;
-    }
+//    public RestClient getRestClient() {
+//        return restClient;
+//    }
 }

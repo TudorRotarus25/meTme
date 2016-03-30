@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tudor.rotarus.unibuc.metme.R;
-import com.tudor.rotarus.unibuc.metme.pojos.get.MeetingsListGetBody;
+import com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingsListGetBody;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
