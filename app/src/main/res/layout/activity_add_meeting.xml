@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/add_meeting_vertical_margin"
-        android:layout_marginBottom="@dimen/add_meeting_vertical_margin"
+        android:layout_marginTop="@dimen/add_meeting_vertical_padding"
+        android:layout_marginBottom="@dimen/add_meeting_vertical_padding"
         android:hint="@string/add_meeting_name_instr"
         android:singleLine="true"
         android:imeOptions="actionDone"
@@ -29,8 +29,8 @@
     <LinearLayout android:id="@+id/activity_add_meeting_place_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/add_meeting_vertical_margin"
-        android:layout_marginBottom="@dimen/add_meeting_vertical_margin"
+        android:layout_marginTop="@dimen/add_meeting_vertical_padding"
+        android:layout_marginBottom="@dimen/add_meeting_vertical_padding"
         android:clickable="true"
         android:orientation="horizontal"
         android:gravity="center_vertical">
@@ -54,8 +54,10 @@
                     android:text="@string/add_meeting_location_instruct"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/add_meeting_time_vertical_margin"
-                    android:layout_marginBottom="@dimen/add_meeting_time_between_vertical_margin"
+                    android:clickable="true"
+                    android:background="?android:selectableItemBackground"
+                    android:paddingTop="@dimen/add_meeting_time_vertical_margin"
+                    android:paddingBottom="@dimen/add_meeting_time_between_vertical_margin"
                     android:layout_marginLeft="@dimen/add_meeting_horizontal_margin"
                     android:layout_marginRight="@dimen/add_meeting_horizontal_margin"/>
 
@@ -86,9 +88,10 @@
     <LinearLayout android:id="@+id/activity_add_meeting_transport_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/add_meeting_vertical_margin"
-        android:layout_marginBottom="@dimen/add_meeting_vertical_margin"
+        android:paddingTop="@dimen/add_meeting_vertical_padding"
+        android:paddingBottom="@dimen/add_meeting_vertical_padding"
         android:clickable="true"
+        android:background="?android:selectableItemBackground"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -118,8 +121,8 @@
     <LinearLayout android:id="@+id/activity_add_meeting_time_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/add_meeting_vertical_margin"
-        android:layout_marginBottom="@dimen/add_meeting_vertical_margin"
+        android:layout_marginTop="@dimen/add_meeting_vertical_padding"
+        android:layout_marginBottom="@dimen/add_meeting_vertical_padding"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -141,19 +144,25 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/add_meeting_time_vertical_margin"
-                android:layout_marginBottom="@dimen/add_meeting_time_between_vertical_margin"
                 android:orientation="horizontal">
 
                 <TextView android:id="@+id/activity_add_meeting_start_date_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/add_meeting_time_vertical_margin"
+                    android:layout_marginBottom="@dimen/add_meeting_time_vertical_margin"
+                    android:clickable="true"
+                    android:background="?android:selectableItemBackground"
                     android:text="@string/accept"
                     android:layout_weight="2"/>
 
                 <TextView android:id="@+id/activity_add_meeting_start_time_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/add_meeting_time_vertical_margin"
+                    android:layout_marginBottom="@dimen/add_meeting_time_vertical_margin"
+                    android:clickable="true"
+                    android:background="?android:selectableItemBackground"
                     android:layout_weight="1"
                     android:text="@string/accept"/>
 
@@ -162,19 +171,25 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/add_meeting_time_between_vertical_margin"
-                android:layout_marginBottom="@dimen/add_meeting_time_vertical_margin"
                 android:orientation="horizontal">
 
                 <TextView android:id="@+id/activity_add_meeting_end_date_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/add_meeting_time_vertical_margin"
+                    android:layout_marginBottom="@dimen/add_meeting_time_vertical_margin"
+                    android:clickable="true"
+                    android:background="?android:selectableItemBackground"
                     android:layout_weight="2"
                     android:text="@string/accept"/>
 
                 <TextView android:id="@+id/activity_add_meeting_end_time_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/add_meeting_time_vertical_margin"
+                    android:layout_marginBottom="@dimen/add_meeting_time_vertical_margin"
+                    android:clickable="true"
+                    android:background="?android:selectableItemBackground"
                     android:layout_weight="1"
                     android:text="@string/accept"/>
 
@@ -191,9 +206,10 @@
     <LinearLayout android:id="@+id/activity_add_meeting_notification_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/add_meeting_vertical_margin"
-        android:layout_marginBottom="@dimen/add_meeting_vertical_margin"
+        android:paddingTop="@dimen/add_meeting_vertical_padding"
+        android:paddingBottom="@dimen/add_meeting_vertical_padding"
         android:clickable="true"
+        android:background="?android:selectableItemBackground"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -222,9 +238,10 @@
     <LinearLayout android:id="@+id/activity_add_meeting_add_people_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/add_meeting_vertical_margin"
-        android:layout_marginBottom="@dimen/add_meeting_vertical_margin"
+        android:paddingTop="@dimen/add_meeting_vertical_padding"
+        android:paddingBottom="@dimen/add_meeting_vertical_padding"
         android:clickable="true"
+        android:background="?android:selectableItemBackground"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 

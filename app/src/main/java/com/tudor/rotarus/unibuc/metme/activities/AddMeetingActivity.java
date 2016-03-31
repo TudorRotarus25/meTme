@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -54,6 +55,10 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
     private TextView timeEndTimeText;
     private TextView notificationText;
     private TextView addMembersText;
+
+    private LinearLayout transportContainer;
+    private LinearLayout notificationContainer;
+    private LinearLayout addMembersContainer;
 
     private Calendar fromTime;
     private Calendar toTime;
@@ -141,6 +146,10 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
         notificationText = (TextView) findViewById(R.id.activity_add_meeting_notification_text);
         addMembersText = (TextView) findViewById(R.id.activity_add_meeting_add_people_text);
 
+        transportContainer = (LinearLayout) findViewById(R.id.activity_add_meeting_transport_container);
+        notificationContainer = (LinearLayout) findViewById(R.id.activity_add_meeting_notification_container);
+        addMembersContainer = (LinearLayout) findViewById(R.id.activity_add_meeting_add_people_container);
+
         initPickers();
         initFields();
         initOnClickListeners();
@@ -171,7 +180,7 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
                 transportMethod = selectedIndex;
             }
         });
-        transportText.setOnClickListener(new View.OnClickListener() {
+        transportContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 transportDialog.show(getFragmentManager(), TAG);
@@ -214,7 +223,7 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
                 notifyTime = Integer.valueOf(getResources().getStringArray(R.array.notification_value_choices)[selectedIndex]);
             }
         });
-        notificationText.setOnClickListener(new View.OnClickListener() {
+        notificationContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 notificationDialog.show(getFragmentManager(), TAG);

@@ -25,7 +25,7 @@
 
     <dimen name="add_meeting_time_vertical_margin">5dp</dimen>
     <dimen name="add_meeting_time_between_vertical_margin">10dp</dimen>
-    <dimen name="add_meeting_vertical_margin">15dp</dimen>
+    <dimen name="add_meeting_vertical_padding">15dp</dimen>
     <dimen name="add_meeting_horizontal_margin">10dp</dimen>
 
     <dimen name="list_all_meetings_vertical_margin">3dp</dimen>

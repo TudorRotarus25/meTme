@@ -64,6 +64,7 @@ public class LoginConfirmActivity extends AppCompatActivity implements ActivateU
         writeTokenToSharedPreferences(response.getId(), response.getToken());
         Intent intent = new Intent(LoginConfirmActivity.this, NavigationDrawerActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override

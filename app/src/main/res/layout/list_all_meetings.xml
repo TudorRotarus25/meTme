@@ -21,6 +21,8 @@
             android:paddingBottom="@dimen/all_meetings_cardView_padding_vertical"
             android:paddingLeft="@dimen/all_meetings_cardView_padding_horizontal"
             android:paddingRight="@dimen/all_meetings_cardView_padding_horizontal"
+            android:clickable="true"
+            android:background="?android:selectableItemBackground"
             android:orientation="vertical">
 
             <LinearLayout

@@ -48,6 +48,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
         } else {
             Intent intent = new Intent(NavigationDrawerActivity.this, LoginNameActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 
@@ -152,11 +153,12 @@ public class NavigationDrawerActivity extends AppCompatActivity
         if(fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.navigation_drawer_fragment_container, fragment);
+            ft.addToBackStack(null);
             ft.commit();
         }
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle(title);
+//            getSupportActionBar().setTitle(title);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
