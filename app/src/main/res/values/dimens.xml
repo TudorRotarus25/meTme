@@ -5,9 +5,9 @@
 
     <dimen name="instruct_topPadding">50dp</dimen>
 
-    <dimen name="text_primary"> 14sp </dimen>
-    <dimen name="text_big"> 20sp </dimen>
-    <dimen name="text_title"> 40sp </dimen>
+    <dimen name="text_primary">14sp</dimen>
+    <dimen name="text_big">20sp</dimen>
+    <dimen name="text_title">40sp</dimen>
 
     <dimen name="activity_login_horizontal_margin">40dp</dimen>
     <dimen name="login_horizontal_editText_margin">5dp</dimen>
@@ -32,5 +32,6 @@
     <dimen name="list_all_meetings_horizontal_margin">5dp</dimen>
     <dimen name="all_meetings_cardView_padding_vertical">16dp</dimen>
     <dimen name="all_meetings_cardView_padding_horizontal">5dp</dimen>
+    <dimen name="fragment_all_meetings_horizontal_margin">45dp</dimen>
 
 </resources>

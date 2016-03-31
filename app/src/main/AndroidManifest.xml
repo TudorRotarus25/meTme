@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tudor.rotarus.unibuc.metme" >
+    package="com.tudor.rotarus.unibuc.metme">
 
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".MyApplication"
@@ -12,38 +12,36 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".activities.login.LoginActivity"
-            android:theme="@style/FullscreenAppTheme" >
-        </activity>
+            android:theme="@style/FullscreenAppTheme" />
         <activity
             android:name=".activities.login.LoginNameActivity"
-            android:theme="@style/FullscreenAppTheme" >
-        </activity>
+            android:theme="@style/FullscreenAppTheme" />
         <activity
             android:name=".activities.login.LoginConfirmActivity"
-            android:theme="@style/FullscreenAppTheme" >
-        </activity>
+            android:theme="@style/FullscreenAppTheme" />
         <activity
             android:name=".activities.NavigationDrawerActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.AddMeetingActivity" >
-        </activity>
+        <activity android:name=".activities.AddMeetingActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
-
+            android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_api_key"/>
+            android:value="@string/google_api_key" />
+
+        <activity android:name=".activities.SettingsActivity" />
+        <activity android:name=".activities.ProfileActivity"></activity>
     </application>
 
 </manifest>

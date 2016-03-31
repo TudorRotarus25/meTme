@@ -25,8 +25,7 @@ public class AllMeetingsListAdapter extends RecyclerView.Adapter<AllMeetingsList
 
     private SimpleDateFormat fromResponse = new SimpleDateFormat("yyyy-MM-dd H:mm:ss", Locale.US);
     private SimpleDateFormat toDate = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.US);
-    private SimpleDateFormat toTimeHour = new SimpleDateFormat("HH", Locale.US);
-    private SimpleDateFormat toTimeMin = new SimpleDateFormat("mm", Locale.US);
+    private SimpleDateFormat toTime = new SimpleDateFormat("HH:mm", Locale.US);
 
     public static class MeetingViewHolder extends RecyclerView.ViewHolder {
 
@@ -34,7 +33,7 @@ public class AllMeetingsListAdapter extends RecyclerView.Adapter<AllMeetingsList
         TextView name;
         TextView place;
         TextView date;
-        TextView timeHour;
+        TextView time;
         TextView timeMin;
 
         public MeetingViewHolder(View itemView) {
@@ -43,8 +42,7 @@ public class AllMeetingsListAdapter extends RecyclerView.Adapter<AllMeetingsList
             name = (TextView) itemView.findViewById(R.id.list_all_meetings_name_textView);
             place = (TextView) itemView.findViewById(R.id.list_all_meetings_place_textView);
             date = (TextView) itemView.findViewById(R.id.list_all_meetings_date_textView);
-            timeHour = (TextView) itemView.findViewById(R.id.list_all_meetings_time_hour_textView);
-            timeMin = (TextView) itemView.findViewById(R.id.list_all_meetings_time_min_textView);
+            time = (TextView) itemView.findViewById(R.id.list_all_meetings_time_textView);
         }
     }
 
@@ -70,8 +68,7 @@ public class AllMeetingsListAdapter extends RecyclerView.Adapter<AllMeetingsList
             fromTime.setTime(fromResponse.parse(meetings.get(position).getFromTime()));
 
             holder.date.setText(toDate.format(fromTime.getTime()));
-            holder.timeHour.setText(toTimeHour.format(fromTime.getTime()));
-            holder.timeMin.setText(toTimeMin.format(fromTime.getTime()));
+            holder.time.setText(toTime.format(fromTime.getTime()));
 
         } catch (ParseException e) {
             e.printStackTrace();

@@ -31,8 +31,6 @@ public class LoginActivity extends AppCompatActivity implements LoginListener, C
     String lastName;
     String phoneNumber;
 
-    MyApplication app;
-
     public static final String LOGIN_EXTRA_PHONE_NUMBER = "LOGIN_EXTRA_PHONE_NUMBER";
 
     @Override
@@ -53,8 +51,6 @@ public class LoginActivity extends AppCompatActivity implements LoginListener, C
         Intent intent = getIntent();
         firstName = intent.getStringExtra(LoginNameActivity.LOGIN_EXTRA_FIRST_NAME);
         lastName = intent.getStringExtra(LoginNameActivity.LOGIN_EXTRA_LAST_NAME);
-
-        app = (MyApplication) getApplication();
 
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override

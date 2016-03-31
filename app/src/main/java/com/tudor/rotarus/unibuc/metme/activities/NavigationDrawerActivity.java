@@ -22,15 +22,14 @@ import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
 import com.tudor.rotarus.unibuc.metme.fragments.AllMeetingsFragment;
+import com.tudor.rotarus.unibuc.metme.fragments.CalendarFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.FriendsFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.HomeFragment;
-import com.tudor.rotarus.unibuc.metme.fragments.ProfileFragment;
 
 public class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "NavigationDrawerAct";
-    private MyApplication app = (MyApplication) getApplication();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +78,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
         View header = navigationView.getHeaderView(0);
 
-        SharedPreferences prefs = getSharedPreferences(app.METME_SHARED_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(MyApplication.METME_SHARED_PREFERENCES, MODE_PRIVATE);
         TextView drawerTitleTextView = (TextView) header.findViewById(R.id.drawer_nav_header_title);
         drawerTitleTextView.setText(prefs.getString("first_name", "") + " " + prefs.getString("last_name", ""));
     }
@@ -103,14 +102,17 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.action_profile:
+                intent = new Intent(this, ProfileActivity.class);
+                startActivity(intent);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -126,27 +128,19 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
     public void displayView(int viewId) {
         Fragment fragment = null;
-        String title = getString(R.string.app_name);
 
         switch (viewId) {
             case R.id.nav_home:
                 fragment = new HomeFragment();
-                title = "Home";
                 break;
             case R.id.nav_all_meetings:
                 fragment = new AllMeetingsFragment();
-                title = "All meetings";
+                break;
+            case R.id.nav_calendar:
+                fragment = new CalendarFragment();
                 break;
             case R.id.nav_friends:
                 fragment = new FriendsFragment();
-                title = "Friends";
-                break;
-            case R.id.nav_profile:
-                fragment = new ProfileFragment();
-                title = "Profile";
-                break;
-            case R.id.nav_settings:
-
                 break;
         }
 
@@ -155,10 +149,6 @@ public class NavigationDrawerActivity extends AppCompatActivity
             ft.replace(R.id.navigation_drawer_fragment_container, fragment);
             ft.addToBackStack(null);
             ft.commit();
-        }
-
-        if(getSupportActionBar() != null){
-//            getSupportActionBar().setTitle(title);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

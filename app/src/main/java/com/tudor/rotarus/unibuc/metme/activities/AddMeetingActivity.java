@@ -2,6 +2,7 @@ package com.tudor.rotarus.unibuc.metme.activities;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,8 +44,6 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
     private static final String TAG = "AddMeetingActivity";
     private static final int PLACE_PICKER_REQUEST = 1;
 
-    private MyApplication app;
-
     private EditText nameEditText;
     private TextView placeText;
     private EditText placeAliasEditText;
@@ -75,6 +74,7 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
 
     private AddMeetingNotificationDialog notificationDialog;
     private AddMeetingTransportDialog transportDialog;
+    private ProgressDialog progressDialog;
 
     private SimpleDateFormat dateFormatter;
     private SimpleDateFormat timeFormatter;
@@ -93,6 +93,8 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
             if(!locationAlias.isEmpty()) {
                 locationName = locationAlias;
             }
+
+            progressDialog.show();
 
             NetworkManager networkManager = NetworkManager.getInstance();
             networkManager.createMeeting(name, callDateTimeFormatter.format(fromTime.getTime()), callDateTimeFormatter.format(toTime.getTime()), notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, getUserPhoneNumber(), 15, new ArrayList<Integer>(), this);
@@ -133,7 +135,6 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
     }
 
     private void initLayout() {
-        app = (MyApplication) getApplication();
 
         nameEditText = (EditText) findViewById(R.id.activity_add_meeting_title_editText);
         placeText = (TextView) findViewById(R.id.activity_add_meeting_place_text);
@@ -312,6 +313,9 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
             }
         }, Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), true);
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Loading");
+        progressDialog.setMessage("Please wait while loading");
 
     }
 
@@ -357,12 +361,14 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
 
     @Override
     public void onCreateMeetingSuccess() {
+        progressDialog.dismiss();
         Intent intent = new Intent(AddMeetingActivity.this, NavigationDrawerActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void onCreateMeetingFailed() {
+        progressDialog.dismiss();
         Toast.makeText(this, "Something went wrong, please try again", Toast.LENGTH_LONG).show();
     }
 }

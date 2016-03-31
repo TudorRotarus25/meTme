@@ -6,13 +6,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tudor.rotarus.unibuc.metme.MyApplication;
@@ -26,11 +27,10 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
 
     private static final String TAG = "AllMeetingsFragment";
 
-    MyApplication app;
-
-    ProgressDialog progressDialog;
-    SwipeRefreshLayout refreshLayout;
-    RecyclerView recyclerView;
+    private ProgressDialog progressDialog;
+    private SwipeRefreshLayout refreshLayout;
+    private RecyclerView recyclerView;
+    private TextView contentEmptyTextView;
 
     private final int INITIAL_CALL = 1;
     private final int REFRESH_CALL = 2;
@@ -53,12 +53,14 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
 
     private void init(final View v) {
 
-        app = (MyApplication) getActivity().getApplication();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("All meetings");
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setTitle("Loading");
         progressDialog.setMessage("Please wait while loading");
         progressDialog.show();
+
+        contentEmptyTextView = (TextView) v.findViewById(R.id.fragment_all_meetings_empty_textView);
 
         refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.fragment_all_meetings_swipeRefreshLayout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -86,7 +88,7 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
     }
 
     private String getPhoneNumber() {
-        SharedPreferences sp = getActivity().getSharedPreferences(app.METME_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences sp = getActivity().getSharedPreferences(MyApplication.METME_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         return sp.getString("phone_number", "");
     }
 
@@ -98,8 +100,20 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
             refreshLayout.setRefreshing(false);
         }
 
-        AllMeetingsListAdapter adapter = new AllMeetingsListAdapter(response.getMeetings());
-        recyclerView.setAdapter(adapter);
+        if(response.getMeetings().size() == 0) {
+
+            refreshLayout.setVisibility(View.GONE);
+            contentEmptyTextView.setVisibility(View.VISIBLE);
+
+        } else {
+            refreshLayout.setVisibility(View.VISIBLE);
+            contentEmptyTextView.setVisibility(View.GONE);
+
+            AllMeetingsListAdapter adapter = new AllMeetingsListAdapter(response.getMeetings());
+            recyclerView.setAdapter(adapter);
+
+        }
+
     }
 
     @Override
