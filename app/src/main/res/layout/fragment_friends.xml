@@ -1,13 +1,28 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.FriendsFragment">
+    tools:context=".fragments.AllMeetingsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/fragment_friends_swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_friends_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView android:id="@+id/fragment_friends_empty_textView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_marginLeft="@dimen/fragment_all_meetings_horizontal_margin"
+        android:layout_marginRight="@dimen/fragment_all_meetings_horizontal_margin"
+        android:visibility="gone"
+        android:gravity="center"
+        android:textSize="@dimen/text_big"
+        android:text="@string/fragment_friends_empty_text"/>
 
 </FrameLayout>

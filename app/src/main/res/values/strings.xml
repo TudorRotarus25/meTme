@@ -37,4 +37,7 @@
     <string name="create">Create</string>
     <string name="car">Car</string>
     <string name="fragment_all_meetings_empty_text">You don\'t have any meetings planned yet</string>
+    <string name="fragment_friends_empty_text">You don\'t have any friends yet</string>
+    <string name="list_friends_button_text_size">Pick up</string>
+    <string name="action_search">Search</string>
 </resources>

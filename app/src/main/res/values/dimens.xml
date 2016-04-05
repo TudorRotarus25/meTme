@@ -33,5 +33,6 @@
     <dimen name="all_meetings_cardView_padding_vertical">16dp</dimen>
     <dimen name="all_meetings_cardView_padding_horizontal">5dp</dimen>
     <dimen name="fragment_all_meetings_horizontal_margin">45dp</dimen>
+    <dimen name="list_friends_vertical_margin">1dp</dimen>
 
 </resources>
