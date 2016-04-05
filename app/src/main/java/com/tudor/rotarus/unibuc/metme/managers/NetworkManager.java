@@ -147,24 +147,24 @@ public class NetworkManager {
         });
     }
 
-    public void listAllMeetings(String phoneNumber, final int callType, final MeetingListListener callback) {
+    public void listAllMeetings(String phoneNumber, final MeetingListListener callback) {
         Call<MeetingsListGetBody> call = requestAPI.MEETINGS_LIST_GET_BODY_CALL(phoneNumber);
         call.enqueue(new Callback<MeetingsListGetBody>() {
             @Override
             public void onResponse(Response<MeetingsListGetBody> response, Retrofit retrofit) {
                 if (response != null && response.code() == 200 && response.body() != null) {
 
-                    callback.onListAllMeetingsSuccess(response.body(), callType);
+                    callback.onListAllMeetingsSuccess(response.body());
 
                 } else {
-                    callback.onListAllMeetingsFailed(callType);
-                    Log.e(TAG, response.errorBody().toString());
+                    callback.onListAllMeetingsFailed();
+                    Log.e(TAG, response.message().toString());
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
-                callback.onListAllMeetingsFailed(callType);
+                callback.onListAllMeetingsFailed();
                 Log.e(TAG, t.getMessage());
             }
         });

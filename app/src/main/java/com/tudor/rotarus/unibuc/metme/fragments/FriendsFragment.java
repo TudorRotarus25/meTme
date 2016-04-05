@@ -23,11 +23,12 @@ import android.view.ViewGroup;
 
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.pojos.FriendsBody;
-import com.tudor.rotarus.unibuc.metme.views.adapters.AllMeetingsListAdapter;
+import com.tudor.rotarus.unibuc.metme.utils.FriendsComparator;
 import com.tudor.rotarus.unibuc.metme.views.adapters.FriendsListAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 
 public class FriendsFragment extends Fragment implements SearchView.OnQueryTextListener {
 
@@ -44,7 +45,7 @@ public class FriendsFragment extends Fragment implements SearchView.OnQueryTextL
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        inflater.inflate(R.menu.menu_friends, menu);
+        inflater.inflate(R.menu.menu_search, menu);
 
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
@@ -99,6 +100,7 @@ public class FriendsFragment extends Fragment implements SearchView.OnQueryTextL
         Log.i(TAG, "" + contacts.size());
 
         contactList = contacts;
+        Collections.sort(contactList, new FriendsComparator());
 
         progressDialog.dismiss();
         refreshLayout.setRefreshing(false);

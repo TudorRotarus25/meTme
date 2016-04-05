@@ -84,4 +84,12 @@ public class AllMeetingsListAdapter extends RecyclerView.Adapter<AllMeetingsList
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
+
+    public List<MeetingsListGetBody.Meeting> getMeetings() {
+        return meetings;
+    }
+
+    public void setMeetings(List<MeetingsListGetBody.Meeting> meetings) {
+        this.meetings = meetings;
+    }
 }

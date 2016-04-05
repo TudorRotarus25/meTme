@@ -40,7 +40,7 @@ public class CalendarFragment extends Fragment implements MeetingListListener {
         calendarView = (CalendarView) view.findViewById(R.id.fragment_calendar_calendar);
 
         NetworkManager networkManager = NetworkManager.getInstance();
-        networkManager.listAllMeetings(getPhoneNumber(), 0, this);
+        networkManager.listAllMeetings(getPhoneNumber(), this);
 
     }
 
@@ -50,7 +50,7 @@ public class CalendarFragment extends Fragment implements MeetingListListener {
     }
 
     @Override
-    public void onListAllMeetingsSuccess(MeetingsListGetBody response, int callType) {
+    public void onListAllMeetingsSuccess(MeetingsListGetBody response) {
         ArrayList<MeetingsListGetBody.Meeting> meetings = response.getMeetings();
 
         for (int i=0;i<meetings.size();i++) {
@@ -59,7 +59,7 @@ public class CalendarFragment extends Fragment implements MeetingListListener {
     }
 
     @Override
-    public void onListAllMeetingsFailed(int callType) {
+    public void onListAllMeetingsFailed() {
 
     }
 }

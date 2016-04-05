@@ -5,11 +5,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -23,7 +28,10 @@ import com.tudor.rotarus.unibuc.metme.pojos.interfaces.MeetingListListener;
 import com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingsListGetBody;
 import com.tudor.rotarus.unibuc.metme.views.adapters.AllMeetingsListAdapter;
 
-public class AllMeetingsFragment extends Fragment implements MeetingListListener {
+import java.util.ArrayList;
+import java.util.List;
+
+public class AllMeetingsFragment extends Fragment implements MeetingListListener, SearchView.OnQueryTextListener{
 
     private static final String TAG = "AllMeetingsFragment";
 
@@ -32,8 +40,8 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
     private RecyclerView recyclerView;
     private TextView contentEmptyTextView;
 
-    private final int INITIAL_CALL = 1;
-    private final int REFRESH_CALL = 2;
+    private AllMeetingsListAdapter adapter;
+    private ArrayList<MeetingsListGetBody.Meeting> meetingsList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +59,21 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
         return v;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        inflater.inflate(R.menu.menu_search, menu);
+
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
     private void init(final View v) {
+
+        setHasOptionsMenu(true);
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("All meetings");
 
@@ -67,7 +89,7 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
             @Override
             public void onRefresh() {
 
-                meetingListCall(REFRESH_CALL);
+                meetingListCall();
 
             }
         });
@@ -77,13 +99,16 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        meetingListCall(INITIAL_CALL);
+        adapter = new AllMeetingsListAdapter(new ArrayList<MeetingsListGetBody.Meeting>());
+        recyclerView.setAdapter(adapter);
+
+        meetingListCall();
     }
 
-    private void meetingListCall(final int callType) {
+    private void meetingListCall() {
 
         NetworkManager networkManager = NetworkManager.getInstance();
-        networkManager.listAllMeetings(getPhoneNumber(), callType, this);
+        networkManager.listAllMeetings(getPhoneNumber(), this);
 
     }
 
@@ -93,13 +118,11 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
     }
 
     @Override
-    public void onListAllMeetingsSuccess(MeetingsListGetBody response, final int callType) {
-        if(callType == INITIAL_CALL) {
-            progressDialog.dismiss();
-        } else {
-            refreshLayout.setRefreshing(false);
-        }
+    public void onListAllMeetingsSuccess(MeetingsListGetBody response) {
+        progressDialog.dismiss();
+        refreshLayout.setRefreshing(false);
 
+        meetingsList = response.getMeetings();
         if(response.getMeetings().size() == 0) {
 
             refreshLayout.setVisibility(View.GONE);
@@ -109,21 +132,41 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
             refreshLayout.setVisibility(View.VISIBLE);
             contentEmptyTextView.setVisibility(View.GONE);
 
-            AllMeetingsListAdapter adapter = new AllMeetingsListAdapter(response.getMeetings());
-            recyclerView.setAdapter(adapter);
-
+            adapter.setMeetings(meetingsList);
+            adapter.notifyDataSetChanged();
         }
 
     }
 
     @Override
-    public void onListAllMeetingsFailed(final int callType) {
-        if(callType == INITIAL_CALL) {
-            progressDialog.dismiss();
-        } else {
-            refreshLayout.setRefreshing(false);
-        }
+    public void onListAllMeetingsFailed() {
+        progressDialog.dismiss();
+        refreshLayout.setRefreshing(false);
 
         Toast.makeText(getActivity(), "Something went wrong. Please try again", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+
+        adapter.setMeetings(filter(newText));
+        adapter.notifyDataSetChanged();
+        return true;
+    }
+
+    private List<MeetingsListGetBody.Meeting> filter(String query) {
+        List<MeetingsListGetBody.Meeting> builder = new ArrayList<>();
+        for(int i = 0 ; i < meetingsList.size() ; i++) {
+            if(meetingsList.get(i).getName().toLowerCase().contains(query.toLowerCase()) || (meetingsList.get(i).getPlaceName() != null && meetingsList.get(i).getPlaceName().toLowerCase().contains(query.toLowerCase()))) {
+                builder.add(meetingsList.get(i));
+            }
+        }
+
+        return builder;
     }
 }
