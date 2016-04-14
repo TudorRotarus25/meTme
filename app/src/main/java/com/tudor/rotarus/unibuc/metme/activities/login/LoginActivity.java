@@ -17,6 +17,7 @@ import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.CountriesListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.LoginListener;
 import com.tudor.rotarus.unibuc.metme.pojos.requests.get.CountryGetBody;
+import com.tudor.rotarus.unibuc.metme.pojos.requests.post.CreateUserPostBody;
 
 import java.util.Locale;
 
@@ -75,14 +76,6 @@ public class LoginActivity extends AppCompatActivity implements LoginListener, C
         });
     }
 
-    private void writeUserInSharedPreferences() {
-        SharedPreferences.Editor editor = getSharedPreferences(MyApplication.METME_SHARED_PREFERENCES, MODE_PRIVATE).edit();
-        editor.putString("first_name", firstName);
-        editor.putString("last_name", lastName);
-        editor.putString("phone_number", phoneNumber);
-        editor.commit();
-    }
-
     private void createUser(final String phoneNumber, final String firstName, final String lastName) {
 
         NetworkManager networkManager = NetworkManager.getInstance();
@@ -119,8 +112,9 @@ public class LoginActivity extends AppCompatActivity implements LoginListener, C
     }
 
     @Override
-    public void onLoginSuccess() {
-        writeUserInSharedPreferences();
+    public void onLoginSuccess(CreateUserPostBody response) {
+
+        ((MyApplication) getApplication()).writeUser(response.getId(), response.getFirstName(), response.getLastName(), response.getPhoneNumber());
 
         Intent intent = new Intent(LoginActivity.this, LoginConfirmActivity.class);
         intent.putExtra(LOGIN_EXTRA_PHONE_NUMBER, LoginActivity.this.phoneNumber);

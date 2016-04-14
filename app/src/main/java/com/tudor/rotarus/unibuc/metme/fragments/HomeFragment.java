@@ -1,22 +1,20 @@
 package com.tudor.rotarus.unibuc.metme.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.tudor.rotarus.unibuc.metme.MyApplication;
+import com.criapp.circleprogresscustomview.CircleProgressView;
+import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.tudor.rotarus.unibuc.metme.R;
 
 public class HomeFragment extends Fragment {
 
-    private static TextView meetingNameTextView;
-    private static TextView meetingTimeTextView;
-    private static TextView meetingPlaceTextView;
-    private static TextView meetingDepartureTimeTextView;
+    private ArcProgress arcProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,10 +35,16 @@ public class HomeFragment extends Fragment {
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Next meeting");
 
-        meetingNameTextView = (TextView) view.findViewById(R.id.content_main_textView_meeting_name);
-        meetingTimeTextView = (TextView) view.findViewById(R.id.content_main_textView_meeting_time);
-        meetingPlaceTextView = (TextView) view.findViewById(R.id.content_main_textView_meeting_place);
-        meetingDepartureTimeTextView = (TextView) view.findViewById(R.id.content_main_textView_meeting_departure_time);
+        arcProgress = (ArcProgress) view.findViewById(R.id.fragment_home_progress_bar);
+        arcProgress.setProgress(65);
+        arcProgress.setBottomText("ETA");
+        arcProgress.setSuffixText("m");
+//        arcProgress.setDrawingCacheBackgroundColor(Color.WHITE);
+//        arcProgress.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+//        arcProgress.setTextColor(R.color.fragment_home_top_text_color);
+//        arcProgress.setFinishedStrokeColor(R.color.colorAccent);
+//        arcProgress.setUnfinishedStrokeColor(R.color.fragment_home_top_text_color);
+
     }
 
 }

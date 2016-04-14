@@ -1,21 +1,19 @@
 package com.tudor.rotarus.unibuc.metme.pojos.requests.post;
 
 /**
- * Created by Tudor on 15.03.2016.
+ * Created by Tudor on 14.04.2016.
  */
-public class ActivateUserPostBody {
+public class CreateUserPostBody {
     int id;
     String firstName;
     String lastName;
     String phoneNumber;
-    String token;
 
-    public ActivateUserPostBody(int id, String firstName, String lastName, String phoneNumber, String token) {
+    public CreateUserPostBody(int id, String firstName, String lastName, String phoneNumber) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.token = token;
     }
 
     public int getId() {
@@ -48,13 +46,5 @@ public class ActivateUserPostBody {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 }

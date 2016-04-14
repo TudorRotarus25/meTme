@@ -97,7 +97,7 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
             progressDialog.show();
 
             NetworkManager networkManager = NetworkManager.getInstance();
-            networkManager.createMeeting(name, callDateTimeFormatter.format(fromTime.getTime()), callDateTimeFormatter.format(toTime.getTime()), notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, getUserPhoneNumber(), 15, new ArrayList<Integer>(), this);
+            networkManager.createMeeting(name, callDateTimeFormatter.format(fromTime.getTime()), callDateTimeFormatter.format(toTime.getTime()), notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, getUserId(), 15, new ArrayList<Integer>(), this);
 
         } else {
             if(name.isEmpty()) {
@@ -347,16 +347,8 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
 
     }
 
-    private String getUserPhoneNumber() {
-        SharedPreferences prefs = getSharedPreferences(MyApplication.METME_SHARED_PREFERENCES, MODE_PRIVATE);
-        if(prefs.contains("phone_number")) {
-            return prefs.getString("phone_number", null);
-        } else {
-            Toast.makeText(this, "Something went wrong, please login again", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, LoginNameActivity.class);
-            startActivity(intent);
-            return null;
-        }
+    private int getUserId() {
+        return ((MyApplication) getApplication()).readId();
     }
 
     @Override

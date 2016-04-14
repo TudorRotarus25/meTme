@@ -7,4 +7,5 @@
     <color name="editTextField">#E1F5FE</color>
     <color name="btn">#455A64</color>
     <color name="fab_icon_tint">#fff</color>
+    <color name="fragment_home_top_text_color">#E1F5FE</color>
 </resources>

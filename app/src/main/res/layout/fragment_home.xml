@@ -6,69 +6,99 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/content_main_textView_title"
-            android:text="@string/next_meeting"
-            android:textSize="@dimen/text_title"
-            android:gravity="center_horizontal"
+        <LinearLayout android:id="@+id/fragment_home_top_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:orientation="vertical"
+            android:background="@color/colorPrimary"
+            android:gravity="center">
 
-        <LinearLayout
-            android:id="@+id/content_main_title_hour_container"
-            android:layout_below="@+id/content_main_textView_title"
-            android:layout_marginTop="@dimen/meeting_details_vertical_margin"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <TextView android:id="@+id/fragment_home_title_textView"
+                android:textSize="@dimen/fragment_home_title_size"
+                android:textColor="@color/fragment_home_top_text_color"
+                android:text="Tudor Rotarus"
+                android:maxLines="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/content_main_textView_meeting_name"
-                android:text="Nume intalnire"
-                android:textSize="@dimen/text_big"
-                android:gravity="center_horizontal"
-                android:layout_width="0dp"
+            <TextView android:id="@+id/fragment_home_location_textView"
+                android:textSize="@dimen/fragment_home_location_size"
+                android:textColor="@color/fragment_home_top_text_color"
+                android:textStyle="italic"
+                android:text="at Piata Romana  12:30"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"/>
+                android:layout_marginBottom="10dp"/>
 
-            <TextView
-                android:id="@+id/content_main_textView_meeting_time"
-                android:layout_below="@+id/content_main_textView_meeting_place"
-                android:text="16:30"
-                android:textSize="@dimen/text_big"
-                android:gravity="center_horizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.github.lzyzsd.circleprogress.ArcProgress
+                    android:id="@+id/fragment_home_progress_bar"
+                    android:layout_width="@dimen/fragment_home_progress_size"
+                    android:layout_height="@dimen/fragment_home_progress_size"
+                    android:layout_centerHorizontal="true" />
+
+                <Button android:id="@+id/fragment_home_transportation_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/fragment_home_progress_bar"
+                    android:drawableLeft="@drawable/ic_directions_car_black_24dp"/>
+
+                <Button android:id="@+id/fragment_home_options_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/fragment_home_progress_bar"/>
+
+            </RelativeLayout>
+
+
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/content_main_textView_meeting_place"
-            android:layout_below="@+id/content_main_title_hour_container"
-            android:layout_marginTop="@dimen/meeting_details_vertical_margin"
-            android:text="at 7 Strada Liviu Rebreanu"
-            android:textSize="@dimen/text_big"
-            android:singleLine="true"
-            android:gravity="center_horizontal"
+        <android.support.v7.widget.CardView
+            android:id="@+id/fragment_home_header_cardView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fragment_home_top_container">
 
-        <TextView
-            android:id="@+id/content_main_textView_meeting_departure_time"
-            android:layout_below="@+id/content_main_textView_meeting_place"
-            android:layout_marginTop="@dimen/meeting_details_vertical_margin"
-            android:text="You should leave at 16:14"
-            android:textSize="@dimen/text_big"
-            android:gravity="center_horizontal"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/fragment_home_list_padding"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:text="@string/participants"
+                    android:textSize="@dimen/text_big"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3" />
+
+                <TextView
+                    android:text="@string/eta"
+                    android:textSize="@dimen/text_big"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAlignment="center"/>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fragment_home_header_cardView"
+            android:layout_alignParentBottom="true"/>
 
     </RelativeLayout>
 

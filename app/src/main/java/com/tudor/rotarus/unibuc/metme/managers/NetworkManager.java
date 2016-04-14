@@ -15,6 +15,7 @@ import com.tudor.rotarus.unibuc.metme.pojos.interfaces.MeetingListListener;
 import com.tudor.rotarus.unibuc.metme.pojos.requests.get.CountryGetBody;
 import com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingsListGetBody;
 import com.tudor.rotarus.unibuc.metme.pojos.requests.post.ActivateUserPostBody;
+import com.tudor.rotarus.unibuc.metme.pojos.requests.post.CreateUserPostBody;
 import com.tudor.rotarus.unibuc.metme.rest.RestAPI;
 import com.tudor.rotarus.unibuc.metme.rest.RestClient;
 
@@ -48,14 +49,14 @@ public class NetworkManager {
     }
 
     public void login(String phoneNumber, String firstName, String lastName, final LoginListener callback) {
-        Call<Void> userPostCall = requestAPI.USER_POST_BODY_CALL(phoneNumber, firstName, lastName);
-        userPostCall.enqueue(new Callback<Void>() {
+        Call<CreateUserPostBody> userPostCall = requestAPI.USER_POST_BODY_CALL(phoneNumber, firstName, lastName);
+        userPostCall.enqueue(new Callback<CreateUserPostBody>() {
             @Override
-            public void onResponse(Response<Void> response, Retrofit retrofit) {
+            public void onResponse(Response<CreateUserPostBody> response, Retrofit retrofit) {
                 if(response != null){
-                    if(response.code() == 200) {
+                    if(response.body() != null && response.code() == 200) {
 
-                        callback.onLoginSuccess();
+                        callback.onLoginSuccess(response.body());
 
                     } else {
                         Log.e(TAG, response.code() + " - " + response.message());
@@ -96,8 +97,8 @@ public class NetworkManager {
         });
     }
 
-    public void activateUser(String phoneNumber, String code, final ActivateUserListener callback) {
-        Call<ActivateUserPostBody> call = requestAPI.ACTIVATE_USER_POST_BODY(phoneNumber, code);
+    public void activateUser(int userId, String code, final ActivateUserListener callback) {
+        Call<ActivateUserPostBody> call = requestAPI.ACTIVATE_USER_POST_BODY(userId, code);
         call.enqueue(new Callback<ActivateUserPostBody>() {
             @Override
             public void onResponse(Response<ActivateUserPostBody> response, Retrofit retrofit) {
@@ -125,9 +126,9 @@ public class NetworkManager {
         });
     }
 
-    public void createMeeting(String name, String fromTime, String toTime, int notifyTime, Double locationLat, Double locationLon, String locationName, String locationAddress, int transportMethod, String phoneNumber, int meetingType, ArrayList<Integer> members, final CreateMeetingListener callback) {
+    public void createMeeting(String name, String fromTime, String toTime, int notifyTime, Double locationLat, Double locationLon, String locationName, String locationAddress, int transportMethod, int authorId, int meetingType, ArrayList<Integer> members, final CreateMeetingListener callback) {
         // TODO: add members, hardcoded type
-        Call<Void> createMeetingCall = requestAPI.MEETING_POST_BODY_CALL(name, fromTime, toTime, notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, phoneNumber, meetingType, members);
+        Call<Void> createMeetingCall = requestAPI.MEETING_POST_BODY_CALL(name, fromTime, toTime, notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, authorId, meetingType, members);
         createMeetingCall.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Response<Void> response, Retrofit retrofit) {
@@ -147,8 +148,8 @@ public class NetworkManager {
         });
     }
 
-    public void listAllMeetings(String phoneNumber, final MeetingListListener callback) {
-        Call<MeetingsListGetBody> call = requestAPI.MEETINGS_LIST_GET_BODY_CALL(phoneNumber);
+    public void listAllMeetings(int userId, final MeetingListListener callback) {
+        Call<MeetingsListGetBody> call = requestAPI.MEETINGS_LIST_GET_BODY_CALL(userId);
         call.enqueue(new Callback<MeetingsListGetBody>() {
             @Override
             public void onResponse(Response<MeetingsListGetBody> response, Retrofit retrofit) {

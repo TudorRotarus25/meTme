@@ -1,6 +1,7 @@
 package com.tudor.rotarus.unibuc.metme.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.widget.CalendarView;
 
 import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
+import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.MeetingListListener;
 import com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingsListGetBody;
@@ -39,8 +41,16 @@ public class CalendarFragment extends Fragment implements MeetingListListener {
 
         calendarView = (CalendarView) view.findViewById(R.id.fragment_calendar_calendar);
 
+        int id = ((MyApplication)getActivity().getApplication()).readId();
+
+        if(id < 0) {
+            Intent intent = new Intent(getActivity(), LoginNameActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+        }
+
         NetworkManager networkManager = NetworkManager.getInstance();
-        networkManager.listAllMeetings(getPhoneNumber(), this);
+        networkManager.listAllMeetings(id, this);
 
     }
 

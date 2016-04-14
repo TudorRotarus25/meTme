@@ -29,7 +29,7 @@ import com.tudor.rotarus.unibuc.metme.fragments.HomeFragment;
 public class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "NavigationDrawerAct";
+    private static final String TAG = "NavigationDrawerActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +41,9 @@ public class NavigationDrawerActivity extends AppCompatActivity
     }
 
     private void checkAuthentication() {
-        SharedPreferences prefs = getSharedPreferences(MyApplication.METME_SHARED_PREFERENCES, MODE_PRIVATE);
-        if(prefs.contains("token")) {
-            Log.i(TAG, prefs.getString("first_name", ""));
+        String token = ((MyApplication) getApplication()).readToken();
+        if(token != null && !token.equals("")) {
+            Log.i(TAG, token);
         } else {
             Intent intent = new Intent(NavigationDrawerActivity.this, LoginNameActivity.class);
             startActivity(intent);
