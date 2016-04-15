@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryLight">#455A64</color>
-    <color name="colorPrimary">#37474F</color>
-    <color name="colorPrimaryDark">#263238</color>
+    <color name="colorPrimaryLight">#1976D2</color>
+    <color name="colorPrimary">#1565C0</color>
+    <color name="colorPrimaryDark">#0D47A1</color>
     <color name="colorAccent">#FF5722</color>
-    <color name="editTextField">#E1F5FE</color>
-    <color name="btn">#455A64</color>
+    <color name="editTextField">#E3F2FD</color>
+    <color name="btn">#1976D2</color>
     <color name="fab_icon_tint">#fff</color>
     <color name="fragment_home_top_text_color">#E1F5FE</color>
 </resources>
