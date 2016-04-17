@@ -4,8 +4,21 @@
 
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <permission
+        android:name="com.tudor.rotarus.unibuc.metme.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.tudor.rotarus.unibuc.metme.permission.C2D_MESSAGE" />
+
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.google.android.c2dm.intent.REGISTRATION"/>
 
     <application
         android:name=".MyApplication"
@@ -44,6 +57,34 @@
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.MeetingDetailsActivity"></activity>
+
+        <service
+            android:name="com.tudor.rotarus.unibuc.metme.gcm.MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.codepath.gcmquickstart" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".gcm.GcmMessageHandler"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+
+        <service android:name=".gcm.RegistrationIntentService" android:exported="false"/>
     </application>
 
 </manifest>

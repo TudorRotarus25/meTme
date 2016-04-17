@@ -6,13 +6,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
+import com.tudor.rotarus.unibuc.metme.gcm.RegistrationIntentService;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.CountriesListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.LoginListener;
@@ -23,14 +27,18 @@ import java.util.Locale;
 
 public class LoginActivity extends AppCompatActivity implements LoginListener, CountriesListener{
 
-    EditText countryEditText;
-    EditText prefixEditText;
-    EditText phoneNumberEditText;
-    Button continueButton;
+    private final String TAG = getClass().getSimpleName();
 
-    String firstName;
-    String lastName;
-    String phoneNumber;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+    private EditText countryEditText;
+    private EditText prefixEditText;
+    private EditText phoneNumberEditText;
+    private Button continueButton;
+
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
 
     public static final String LOGIN_EXTRA_PHONE_NUMBER = "LOGIN_EXTRA_PHONE_NUMBER";
 
@@ -118,7 +126,35 @@ public class LoginActivity extends AppCompatActivity implements LoginListener, C
 
         Intent intent = new Intent(LoginActivity.this, LoginConfirmActivity.class);
         intent.putExtra(LOGIN_EXTRA_PHONE_NUMBER, LoginActivity.this.phoneNumber);
+
+        if(checkPlayServices()) {
+            registerGCM();
+        }
+
         startActivity(intent);
+    }
+
+    private void registerGCM() {
+
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
+
+    }
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if(resultCode != ConnectionResult.SUCCESS) {
+            if(apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i(TAG, "This device is not supported");
+                Toast.makeText(getApplicationContext(), "This device is not supported", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 
     @Override

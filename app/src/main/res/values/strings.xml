@@ -3,6 +3,9 @@
 
     <string name="google_api_key">AIzaSyBj8EYsjc2JE7AeGmrH_pzFWuF34Z-nTyg</string>
 
+    <string name="google_cloud_messaging_server_api_key">AIzaSyBhjcebuzIt7sE4_wUmKLDE0k4j1y4c6ic</string>
+    <string name="gcm_sender_id">71490785062</string>
+
     <string name="instructions">Now please enter your phone number</string>
     <string name="country">Country</string>
     <string name="phoneNumber">Phone number</string>
@@ -24,8 +27,6 @@
 
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_meeting_location_instruct">Enter the location of the meeting</string>
     <string name="add_meeting_name_instr">Meeting name</string>
     <string name="add_meeting_add_people_inst">Add people to the meeting</string>

@@ -323,7 +323,7 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == PLACE_PICKER_REQUEST && resultCode == Activity.RESULT_OK) {
 
-            final Place place = PlacePicker.getPlace(this, data);
+            final Place place = PlacePicker.getPlace(data, this);
             locationName = place.getName().toString();
             locationAddress = place.getAddress().toString();
             locationLat = place.getLatLng().latitude;

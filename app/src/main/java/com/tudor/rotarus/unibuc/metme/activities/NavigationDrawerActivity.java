@@ -17,7 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
@@ -25,6 +28,7 @@ import com.tudor.rotarus.unibuc.metme.fragments.AllMeetingsFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.CalendarFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.FriendsFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.HomeFragment;
+import com.tudor.rotarus.unibuc.metme.gcm.RegistrationIntentService;
 
 public class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

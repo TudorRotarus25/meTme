@@ -1,17 +1,13 @@
 package com.tudor.rotarus.unibuc.metme.managers;
 
-import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.tudor.rotarus.unibuc.metme.MyApplication;
-import com.tudor.rotarus.unibuc.metme.activities.NavigationDrawerActivity;
-import com.tudor.rotarus.unibuc.metme.activities.login.LoginConfirmActivity;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.ActivateUserListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.CountriesListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.CreateMeetingListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.LoginListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.MeetingListListener;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.RefreshGcmTokenListener;
 import com.tudor.rotarus.unibuc.metme.pojos.requests.get.CountryGetBody;
 import com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingsListGetBody;
 import com.tudor.rotarus.unibuc.metme.pojos.requests.post.ActivateUserPostBody;
@@ -49,7 +45,7 @@ public class NetworkManager {
     }
 
     public void login(String phoneNumber, String firstName, String lastName, final LoginListener callback) {
-        Call<CreateUserPostBody> userPostCall = requestAPI.USER_POST_BODY_CALL(phoneNumber, firstName, lastName);
+        Call<CreateUserPostBody> userPostCall = requestAPI.USER_POST_CALL(phoneNumber, firstName, lastName);
         userPostCall.enqueue(new Callback<CreateUserPostBody>() {
             @Override
             public void onResponse(Response<CreateUserPostBody> response, Retrofit retrofit) {
@@ -77,7 +73,7 @@ public class NetworkManager {
     }
 
     public void populateCoutryField(String locale, final CountriesListener callback) {
-        Call<CountryGetBody> getCountryDetailsCall = requestAPI.COUNTRY_GET_BODY_CALL(locale);
+        Call<CountryGetBody> getCountryDetailsCall = requestAPI.COUNTRY_GET_CALL(locale);
         getCountryDetailsCall.enqueue(new Callback<CountryGetBody>() {
             @Override
             public void onResponse(Response<CountryGetBody> response, Retrofit retrofit) {
@@ -98,7 +94,7 @@ public class NetworkManager {
     }
 
     public void activateUser(int userId, String code, final ActivateUserListener callback) {
-        Call<ActivateUserPostBody> call = requestAPI.ACTIVATE_USER_POST_BODY(userId, code);
+        Call<ActivateUserPostBody> call = requestAPI.ACTIVATE_USER_POST_CALL(userId, code);
         call.enqueue(new Callback<ActivateUserPostBody>() {
             @Override
             public void onResponse(Response<ActivateUserPostBody> response, Retrofit retrofit) {
@@ -128,7 +124,7 @@ public class NetworkManager {
 
     public void createMeeting(String name, String fromTime, String toTime, int notifyTime, Double locationLat, Double locationLon, String locationName, String locationAddress, int transportMethod, int authorId, int meetingType, ArrayList<Integer> members, final CreateMeetingListener callback) {
         // TODO: add members, hardcoded type
-        Call<Void> createMeetingCall = requestAPI.MEETING_POST_BODY_CALL(name, fromTime, toTime, notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, authorId, meetingType, members);
+        Call<Void> createMeetingCall = requestAPI.MEETING_POST_CALL(name, fromTime, toTime, notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, authorId, meetingType, members);
         createMeetingCall.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Response<Void> response, Retrofit retrofit) {
@@ -149,7 +145,7 @@ public class NetworkManager {
     }
 
     public void listAllMeetings(int userId, final MeetingListListener callback) {
-        Call<MeetingsListGetBody> call = requestAPI.MEETINGS_LIST_GET_BODY_CALL(userId);
+        Call<MeetingsListGetBody> call = requestAPI.MEETINGS_LIST_GET_CALL(userId);
         call.enqueue(new Callback<MeetingsListGetBody>() {
             @Override
             public void onResponse(Response<MeetingsListGetBody> response, Retrofit retrofit) {
@@ -167,6 +163,27 @@ public class NetworkManager {
             public void onFailure(Throwable t) {
                 callback.onListAllMeetingsFailed();
                 Log.e(TAG, t.getMessage());
+            }
+        });
+    }
+
+    public void refreshGcmToken(int userId, String token, final RefreshGcmTokenListener callback) {
+        Call<Void> call = requestAPI.GCM_REFRESH_TOKEN_POST_CALL(userId, token);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Response<Void> response, Retrofit retrofit) {
+                if(response != null && response.code() == 200) {
+                    callback.onTokenRefreshSuccess();
+                } else {
+                    callback.onTokenRefreshFailed();
+                    Log.e(TAG, "Refresh gcm token failed: " + response.code() + " " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                callback.onTokenRefreshFailed();
+                Log.e(TAG, "Refresh gcm token failed: " + t.getMessage());
             }
         });
     }
