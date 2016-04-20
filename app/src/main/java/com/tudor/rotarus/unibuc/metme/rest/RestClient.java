@@ -16,7 +16,7 @@ import retrofit.Retrofit;
  */
 public class RestClient {
 
-    private static final String BASE_URL = "http://46.101.162.51/api/v1/public/";
+    private static final String BASE_URL = "http://46.101.162.51/api/v2/public/";
     private RestAPI apiService;
 
     public RestClient() {

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.criapp.circleprogresscustomview.CircleProgressView;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingGetBody;
 
@@ -46,7 +47,8 @@ public class HomeParticipantsListAdapter extends RecyclerView.Adapter<HomePartic
     @Override
     public void onBindViewHolder(ParticipantsViewHolder holder, int position) {
         holder.nameTextView.setText(participants.get(position).getName());
-        holder.etaTextView.setText(participants.get(position).getEta());
+        holder.etaTextView.setText(participants.get(position).getEta() + " m");
+        holder.icon.setProgress((int)(participants.get(position).getEta() * 6));
     }
 
     @Override
@@ -56,13 +58,13 @@ public class HomeParticipantsListAdapter extends RecyclerView.Adapter<HomePartic
 
     public class ParticipantsViewHolder extends RecyclerView.ViewHolder {
         
-        private ImageView icon;
+        private CircleProgressView icon;
         private TextView nameTextView;
         private TextView etaTextView;
 
         public ParticipantsViewHolder(View itemView) {
             super(itemView);
-            icon = (ImageView) itemView.findViewById(R.id.list_home_participants_icon);
+            icon = (CircleProgressView) itemView.findViewById(R.id.list_home_participants_progress);
             nameTextView = (TextView) itemView.findViewById(R.id.list_home_participants_name_textView);
             etaTextView = (TextView) itemView.findViewById(R.id.list_home_participants_eta_textView);
         }

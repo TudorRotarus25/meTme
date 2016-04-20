@@ -39,5 +39,6 @@
     <dimen name="fragment_home_location_size">15sp</dimen>
     <dimen name="fragment_home_list_padding">10dp</dimen>
     <dimen name="fragment_home_header_padding_vertical">35dp</dimen>
+    <dimen name="list_home_participants_inner_horizontal_padding">10dp</dimen>
 
 </resources>

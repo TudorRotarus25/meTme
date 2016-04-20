@@ -44,18 +44,25 @@
                     android:layout_height="@dimen/fragment_home_progress_size"
                     android:layout_centerHorizontal="true" />
 
-                <Button android:id="@+id/fragment_home_transportation_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fragment_home_transportation_button"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/fragment_home_progress_bar"
-                    android:drawableLeft="@drawable/ic_directions_car_black_24dp"/>
+                    android:layout_marginRight="20dp"
+                    android:tint="@color/fab_icon_tint"
+                    android:src="@drawable/ic_directions_car_black_24dp"/>
 
-                <Button android:id="@+id/fragment_home_options_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fragment_home_options_button"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/fragment_home_progress_bar"/>
+                    android:layout_toRightOf="@+id/fragment_home_progress_bar"
+                    android:layout_marginLeft="20dp"
+                    android:tint="@color/fab_icon_tint"
+                    android:src="@drawable/ic_touch_app_black_24dp"/>
 
             </RelativeLayout>
 
@@ -69,42 +76,40 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/fragment_home_top_container">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/fragment_home_list_padding"
-                android:orientation="horizontal">
+                android:padding="@dimen/fragment_home_list_padding">
 
                 <TextView
+                    android:id="@+id/fragment_home_header_participants_textView"
                     android:text="@string/participants"
                     android:textSize="@dimen/text_big"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3" />
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/fragment_home_header_eta_textView"/>
 
                 <TextView
+                    android:id="@+id/fragment_home_header_eta_textView"
                     android:text="@string/eta"
                     android:textSize="@dimen/text_big"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAlignment="center"/>
+                    android:paddingRight="@dimen/list_home_participants_inner_horizontal_padding"
+                    android:paddingLeft="@dimen/list_home_participants_inner_horizontal_padding"
+                    android:layout_alignParentRight="true"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </android.support.v7.widget.CardView>
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_home_participants_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/fragment_home_header_cardView"
-            android:layout_alignParentBottom="true">
-
-            <android.support.v7.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_alignParentBottom="true"/>
 
     </RelativeLayout>
 

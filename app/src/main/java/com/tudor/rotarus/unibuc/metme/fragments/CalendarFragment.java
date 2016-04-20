@@ -41,6 +41,8 @@ public class CalendarFragment extends Fragment implements MeetingListListener {
 
         calendarView = (CalendarView) view.findViewById(R.id.fragment_calendar_calendar);
 
+        getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);
+
         int id = ((MyApplication)getActivity().getApplication()).readId();
 
         if(id < 0) {

@@ -104,6 +104,8 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
         adapter = new AllMeetingsListAdapter(new ArrayList<MeetingsListGetBody.Meeting>());
         recyclerView.setAdapter(adapter);
 
+        getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);
+
         meetingListCall();
     }
 

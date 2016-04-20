@@ -97,9 +97,11 @@ public class MeetingGetBody {
     public class Participant {
         int id;
         String name;
-        String eta;
+        int eta;
+        String initials;
+        String phoneNumber;
 
-        public Participant(int id, String name, String eta) {
+        public Participant(int id, String name, int eta) {
             this.id = id;
             this.name = name;
             this.eta = eta;
@@ -124,11 +126,11 @@ public class MeetingGetBody {
             this.name = name;
         }
 
-        public String getEta() {
+        public int getEta() {
             return eta;
         }
 
-        public void setEta(String eta) {
+        public void setEta(int eta) {
             this.eta = eta;
         }
     }

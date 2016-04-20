@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -8,35 +9,62 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/fragment_home_list_padding"
-            android:orientation="horizontal">
+            android:gravity="center_vertical">
 
-            <ImageView android:id="@+id/list_home_participants_icon"
-                android:layout_width="0dp"
+            <com.criapp.circleprogresscustomview.CircleProgressView
+                android:id="@+id/list_home_participants_progress"
+                app:strokeWidth="10"
+                app:startProgressPosition="90"
+                android:layout_width="70dp"
+                android:layout_height="70dp"/>
+
+            <LinearLayout
+                android:layout_alignLeft="@+id/list_home_participants_progress"
+                android:layout_alignRight="@+id/list_home_participants_progress"
+                android:layout_alignTop="@+id/list_home_participants_progress"
+                android:layout_alignBottom="@+id/list_home_participants_progress"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/list_home_participants_progress_textView"
+                    android:text="TR"
+                    android:textSize="@dimen/text_big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
 
             <TextView android:id="@+id/list_home_participants_name_textView"
                 android:text="Tudor Rotarus"
                 android:textSize="@dimen/text_big"
                 android:maxLines="1"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"/>
+                android:paddingLeft="@dimen/list_home_participants_inner_horizontal_padding"
+                android:paddingRight="@dimen/list_home_participants_inner_horizontal_padding"
+                android:layout_toRightOf="@+id/list_home_participants_progress"
+                android:layout_toLeftOf="@+id/list_home_participants_eta_textView"
+                android:layout_centerVertical="true"/>
 
             <TextView android:id="@+id/list_home_participants_eta_textView"
                 android:text="100 m"
                 android:textSize="@dimen/text_big"
                 android:maxLines="1"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textAlignment="center"/>
+                android:paddingLeft="@dimen/list_home_participants_inner_horizontal_padding"
+                android:paddingRight="@dimen/list_home_participants_inner_horizontal_padding"
+                android:textAlignment="center"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 

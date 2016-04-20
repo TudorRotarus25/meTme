@@ -92,6 +92,8 @@ public class FriendsFragment extends Fragment implements SearchView.OnQueryTextL
         adapter = new FriendsListAdapter(contactList);
         recyclerView.setAdapter(adapter);
 
+        getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);
+
         new ContactsTask().execute(null, null);
     }
 
