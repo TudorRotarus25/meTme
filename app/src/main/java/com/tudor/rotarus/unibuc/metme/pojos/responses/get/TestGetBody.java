@@ -1,4 +1,4 @@
-package com.tudor.rotarus.unibuc.metme.pojos.requests.get;
+package com.tudor.rotarus.unibuc.metme.pojos.responses.get;
 
 /**
  * Created by Tudor on 04.03.2016.

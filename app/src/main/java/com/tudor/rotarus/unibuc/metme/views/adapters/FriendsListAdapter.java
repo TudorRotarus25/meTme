@@ -1,5 +1,6 @@
 package com.tudor.rotarus.unibuc.metme.views.adapters;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tudor.rotarus.unibuc.metme.R;
-import com.tudor.rotarus.unibuc.metme.pojos.FriendsBody;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.post.FriendsPostBody;
 
 import java.util.List;
 
@@ -19,25 +20,27 @@ import java.util.List;
  */
 public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.FriendsViewHolder> {
 
-    private List<FriendsBody> contacts;
+    private List<FriendsPostBody.Friend> contacts;
 
     public static class FriendsViewHolder extends RecyclerView.ViewHolder {
 
         private CardView cardView;
         private ImageView icon;
+        private TextView iconText;
         private TextView name;
-        private Button pickMe;
+        private FloatingActionButton pickMe;
 
         public FriendsViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.list_friends_cardView);
             icon = (ImageView) itemView.findViewById(R.id.list_friends_icon);
+            iconText = (TextView) itemView.findViewById(R.id.list_friends_icon_inner_text);
             name = (TextView) itemView.findViewById(R.id.list_friends_name_textView);
-            pickMe = (Button) itemView.findViewById(R.id.list_friends_pickup_button);
+            pickMe = (FloatingActionButton) itemView.findViewById(R.id.list_friends_pickup_button);
         }
     }
 
-    public FriendsListAdapter(List<FriendsBody> contacts) {
+    public FriendsListAdapter(List<FriendsPostBody.Friend> contacts) {
         this.contacts = contacts;
     }
 
@@ -48,17 +51,18 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         return viewHolder;
     }
 
-    public List<FriendsBody> getContacts() {
+    public List<FriendsPostBody.Friend> getContacts() {
         return contacts;
     }
 
-    public void setContacts(List<FriendsBody> contacts) {
+    public void setContacts(List<FriendsPostBody.Friend> contacts) {
         this.contacts = contacts;
     }
 
     @Override
     public void onBindViewHolder(FriendsViewHolder holder, int position) {
         holder.name.setText(contacts.get(position).getName());
+        holder.iconText.setText(contacts.get(position).getInitials());
     }
 
     @Override

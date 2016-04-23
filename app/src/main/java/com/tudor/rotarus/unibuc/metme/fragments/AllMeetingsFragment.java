@@ -1,9 +1,7 @@
 package com.tudor.rotarus.unibuc.metme.fragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -18,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,8 +23,9 @@ import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
-import com.tudor.rotarus.unibuc.metme.pojos.interfaces.MeetingListListener;
-import com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingsListGetBody;
+import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.MeetingListListener;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingsListGetBody;
 import com.tudor.rotarus.unibuc.metme.views.adapters.AllMeetingsListAdapter;
 
 import java.util.ArrayList;
@@ -44,6 +42,8 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
 
     private AllMeetingsListAdapter adapter;
     private ArrayList<MeetingsListGetBody.Meeting> meetingsList;
+
+    private SharedPreferencesManager sharedPreferencesManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,6 +74,8 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
     }
 
     private void init(final View v) {
+
+        sharedPreferencesManager = SharedPreferencesManager.getInstance();
 
         setHasOptionsMenu(true);
 
@@ -111,7 +113,7 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
 
     private void meetingListCall() {
 
-        int id = ((MyApplication)getActivity().getApplication()).readId();
+        int id = sharedPreferencesManager.readId(getContext());
 
         if(id < 0) {
             Intent intent = new Intent(getActivity(), LoginNameActivity.class);

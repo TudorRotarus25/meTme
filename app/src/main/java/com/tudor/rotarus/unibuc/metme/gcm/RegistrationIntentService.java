@@ -10,7 +10,8 @@ import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
-import com.tudor.rotarus.unibuc.metme.pojos.interfaces.RefreshGcmTokenListener;
+import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.RefreshGcmTokenListener;
 
 import java.io.IOException;
 
@@ -32,6 +33,8 @@ public class RegistrationIntentService extends IntentService implements RefreshG
     @Override
     protected void onHandleIntent(Intent intent) {
 
+        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance();
+
         InstanceID instanceID = InstanceID.getInstance(this);
         String senderId = getResources().getString(R.string.gcm_sender_id);
         try {
@@ -39,19 +42,21 @@ public class RegistrationIntentService extends IntentService implements RefreshG
             String token = instanceID.getToken(senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
             Log.d(TAG, "GCM Registration Token: " + token);
 
-            ((MyApplication)getApplication()).writeGcmToken(token);
+            sharedPreferencesManager.writeGcmToken(getApplicationContext(), token);
             sendRegistrationToServer(token);
 
         } catch (IOException e) {
             Log.d(TAG, "Failed to complete token refresh", e);
-            ((MyApplication)getApplication()).writeFailedToSendGcmToken();
+            sharedPreferencesManager.writeFailedToSendGcmToken(getApplicationContext());
         }
 
     }
 
     private void sendRegistrationToServer(String token) {
 
-        int userId = ((MyApplication)getApplication()).readId();
+        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance();
+
+        int userId = sharedPreferencesManager.readId(getApplicationContext());
         if(userId >= 0) {
             NetworkManager networkManager = NetworkManager.getInstance();
             networkManager.refreshGcmToken(userId, token, this);
@@ -69,7 +74,10 @@ public class RegistrationIntentService extends IntentService implements RefreshG
 
     @Override
     public void onTokenRefreshFailed() {
+
+        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance();
+
         Log.d(TAG, "Failed to complete token refresh");
-        ((MyApplication)getApplication()).writeFailedToSendGcmToken();
+        sharedPreferencesManager.writeFailedToSendGcmToken(getApplicationContext());
     }
 }

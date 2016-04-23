@@ -1,6 +1,6 @@
-package com.tudor.rotarus.unibuc.metme.pojos.interfaces;
+package com.tudor.rotarus.unibuc.metme.pojos.interfaces.network;
 
-import com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingsListGetBody;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingsListGetBody;
 
 /**
  * Created by Tudor on 30.03.2016.

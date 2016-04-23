@@ -1,28 +1,22 @@
 package com.tudor.rotarus.unibuc.metme.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
-import com.criapp.circleprogresscustomview.CircleProgressView;
 import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.tudor.rotarus.unibuc.metme.R;
-import com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingGetBody;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingGetBody;
 import com.tudor.rotarus.unibuc.metme.views.adapters.HomeParticipantsListAdapter;
 
 import java.util.ArrayList;
-
-import static com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingGetBody.*;
 
 public class HomeFragment extends Fragment {
 

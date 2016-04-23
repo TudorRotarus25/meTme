@@ -1,120 +1,114 @@
 package com.tudor.rotarus.unibuc.metme;
 
 import android.app.Application;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.tudor.rotarus.unibuc.metme.gcm.RegistrationIntentService;
-import com.tudor.rotarus.unibuc.metme.rest.RestClient;
+import com.tudor.rotarus.unibuc.metme.db.DatabaseHelper;
+import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
+import com.tudor.rotarus.unibuc.metme.pojos.requests.FriendsBody;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.FriendsListListener;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.post.FriendsPostBody;
+
+import java.util.ArrayList;
 
 /**
  * Created by Tudor on 29.02.2016.
  */
 public class MyApplication extends Application {
 
-    public static final String TAG = "MyApplication";
-
-    public static final String METME_SHARED_PREFERENCES = "METME_SHARED_PREFERENCES_FIRST_NAME";
-
-    private static final String ID = "_id";
-    private static final String FIRST_NAME = "first_name";
-    private static final String LAST_NAME = "last_name";
-    private static final String PHONE_NUMBER = "phone_number";
-    private static final String TOKEN = "token";
-    private static final String GCM_TOKEN = "gcm_token";
-    private static final String SENT_GCM_TOKEN_TO_SERVER = "sent_gcm_token_to_server";
-
-    private SharedPreferences.Editor editor;
-    private SharedPreferences preferences;
+    public final String TAG = this.getClass().getSimpleName(); //"MyApplication";
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        preferences = getSharedPreferences(METME_SHARED_PREFERENCES, MODE_PRIVATE);
-        editor = getSharedPreferences(METME_SHARED_PREFERENCES, MODE_PRIVATE).edit();
+        refreshFriendList();
 
     }
 
-    public void writeUser(int id, String firstName, String lastName, String phoneNumber) {
-        editor.putInt(ID, id);
-        editor.putString(FIRST_NAME, firstName);
-        editor.putString(LAST_NAME, lastName);
-        editor.putString(PHONE_NUMBER, phoneNumber);
-        editor.commit();
+
+
+    private void refreshFriendList() {
+        new ContactsTask().execute();
     }
 
-    public void writeToken(String token) {
-        editor.putString(TOKEN, token);
-        editor.putBoolean(SENT_GCM_TOKEN_TO_SERVER, true);
-        editor.commit();
-    }
+    private FriendsListListener callback = new FriendsListListener() {
+        @Override
+        public void onFriendsListSuccess(FriendsPostBody response) {
+            //TODO: write response in local DB
+            DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+            db.insertAllContacts(response);
+            Log.i(TAG, "Friends inserted successfully");
+        }
 
-    public void writeFailedToSendGcmToken() {
-        editor.putBoolean(SENT_GCM_TOKEN_TO_SERVER, false);
-        editor.commit();
-    }
+        @Override
+        public void onFriendsListFailed() {
+            Log.e(TAG, "Friends refresh did not work");
+        }
+    };
 
-    public void writeGcmToken(String token) {
-        editor.putString(GCM_TOKEN, token);
-        editor.commit();
-    }
+    private class ContactsTask extends AsyncTask<Void, Void, FriendsBody> {
 
-    public int readId() {
-        if(preferences.contains(ID)) {
-            return preferences.getInt(ID, -1);
-        } else {
-            return -2;
+        @Override
+        protected FriendsBody doInBackground(Void... params) {
+
+            return fetchContacts();
+
+        }
+
+        @Override
+        protected void onPostExecute(FriendsBody friendsBodies) {
+            super.onPostExecute(friendsBodies);
+
+            NetworkManager networkManager = NetworkManager.getInstance();
+            networkManager.listFriends(friendsBodies, callback);
         }
     }
 
-    public String readFirstName() {
-        if(preferences.contains(FIRST_NAME)) {
-            return preferences.getString(FIRST_NAME, "");
-        } else {
-            return null;
-        }
-    }
+    private FriendsBody fetchContacts() {
 
-    public String readLastName() {
-        if(preferences.contains(LAST_NAME)) {
-            return preferences.getString(LAST_NAME, "");
-        } else {
-            return null;
-        }
-    }
+        final Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
+        final String _ID = ContactsContract.Contacts._ID;
+        final String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
+        final String HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER;
 
-    public String readPhoneNumber() {
-        if(preferences.contains(PHONE_NUMBER)) {
-            return preferences.getString(PHONE_NUMBER, "");
-        } else {
-            return null;
-        }
-    }
+        final Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        final String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
+        final String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
 
-    public String readToken() {
-        if(preferences.contains(TOKEN)) {
-            return preferences.getString(TOKEN, "");
-        } else {
-            return null;
-        }
-    }
+        ArrayList<FriendsBody.FriendBody> result = new ArrayList<>();
 
-    public String readGcmToken() {
-        if (preferences.contains(GCM_TOKEN)) {
-            return preferences.getString(GCM_TOKEN, "");
-        }
-        return null;
-    }
+        Cursor cursor = getContentResolver().query(CONTENT_URI, null, null, null, null);
 
-    public boolean readSentGcmToken() {
-        if(preferences.contains(SENT_GCM_TOKEN_TO_SERVER)) {
-            return preferences.getBoolean(SENT_GCM_TOKEN_TO_SERVER, false);
+        if (cursor.getCount() > 0) {
+
+            while (cursor.moveToNext()) {
+
+                String contactId = cursor.getString(cursor.getColumnIndex(_ID));
+                String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
+                int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
+
+                if (hasPhoneNumber > 0) {
+
+                    FriendsBody.FriendBody newFriend = new FriendsBody().new FriendBody(contactId, name);
+                    Cursor phoneCursor = getContentResolver().query(PhoneCONTENT_URI, null, Phone_CONTACT_ID + " = ?", new String[]{contactId}, null);
+                    while (phoneCursor.moveToNext()) {
+                        String phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
+                        if (phoneNumber != null) {
+                            newFriend.addPhoneNumber(phoneNumber);
+                        }
+                    }
+                    phoneCursor.close();
+                    result.add(newFriend);
+                }
+            }
+            cursor.close();
         }
-        return false;
+        return new FriendsBody(result);
     }
 }

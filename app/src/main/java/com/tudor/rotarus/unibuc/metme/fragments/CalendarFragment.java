@@ -15,14 +15,17 @@ import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
-import com.tudor.rotarus.unibuc.metme.pojos.interfaces.MeetingListListener;
-import com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingsListGetBody;
+import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.MeetingListListener;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingsListGetBody;
 
 import java.util.ArrayList;
 
 public class CalendarFragment extends Fragment implements MeetingListListener {
 
     private CalendarView calendarView;
+
+    private SharedPreferencesManager sharedPreferencesManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,13 +40,15 @@ public class CalendarFragment extends Fragment implements MeetingListListener {
 
     private void init(View view) {
 
+        sharedPreferencesManager = SharedPreferencesManager.getInstance();
+
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Calendar");
 
         calendarView = (CalendarView) view.findViewById(R.id.fragment_calendar_calendar);
 
         getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);
 
-        int id = ((MyApplication)getActivity().getApplication()).readId();
+        int id = sharedPreferencesManager.readId(getContext());
 
         if(id < 0) {
             Intent intent = new Intent(getActivity(), LoginNameActivity.class);
@@ -54,11 +59,6 @@ public class CalendarFragment extends Fragment implements MeetingListListener {
         NetworkManager networkManager = NetworkManager.getInstance();
         networkManager.listAllMeetings(id, this);
 
-    }
-
-    private String getPhoneNumber() {
-        SharedPreferences sp = getActivity().getSharedPreferences(MyApplication.METME_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        return sp.getString("phone_number", "");
     }
 
     @Override

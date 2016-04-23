@@ -1,20 +1,21 @@
 package com.tudor.rotarus.unibuc.metme.rest;
 
-import com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingsListGetBody;
-import com.tudor.rotarus.unibuc.metme.pojos.requests.post.ActivateUserPostBody;
-import com.tudor.rotarus.unibuc.metme.pojos.requests.get.CountryGetBody;
-import com.tudor.rotarus.unibuc.metme.pojos.requests.post.CreateUserPostBody;
+import com.tudor.rotarus.unibuc.metme.pojos.requests.FriendsBody;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.get.CountryGetBody;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingsListGetBody;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.post.ActivateUserPostBody;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.post.CreateUserPostBody;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.post.FriendsPostBody;
 
 import java.util.ArrayList;
 
-import retrofit.Call;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import retrofit.http.Url;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 /**
  * Created by Tudor on 04.03.2016.
@@ -31,6 +32,9 @@ public interface RestAPI {
     @FormUrlEncoded
     @POST("users/activate")
     Call<ActivateUserPostBody> ACTIVATE_USER_POST_CALL(@Field("user_id") int userId, @Field("sms_code") String smsCode);
+
+    @POST("users/friends")
+    Call<FriendsPostBody> FRIENDS_LIST_POST_CALL(@Body FriendsBody body);
 
     @FormUrlEncoded
     @POST("meetings/create")

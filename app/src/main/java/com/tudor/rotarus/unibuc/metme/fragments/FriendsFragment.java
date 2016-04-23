@@ -1,14 +1,9 @@
 package com.tudor.rotarus.unibuc.metme.fragments;
 
 import android.app.ProgressDialog;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,27 +15,30 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.tudor.rotarus.unibuc.metme.R;
-import com.tudor.rotarus.unibuc.metme.pojos.FriendsBody;
+import com.tudor.rotarus.unibuc.metme.managers.LocalDbManager;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.db.FriendsDbListener;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.post.FriendsPostBody;
 import com.tudor.rotarus.unibuc.metme.utils.FriendsComparator;
 import com.tudor.rotarus.unibuc.metme.views.adapters.FriendsListAdapter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
-public class FriendsFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class FriendsFragment extends Fragment implements SearchView.OnQueryTextListener, FriendsDbListener {
 
     private final String TAG = getClass().getSimpleName();
 
-    private SwipeRefreshLayout refreshLayout;
     private RecyclerView recyclerView;
     private FriendsListAdapter adapter;
 
     private ProgressDialog progressDialog;
 
-    private ArrayList<FriendsBody> contactList;
+    private ArrayList<FriendsPostBody.Friend> contactList;
+
+    private LocalDbManager dbManager;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -75,14 +73,6 @@ public class FriendsFragment extends Fragment implements SearchView.OnQueryTextL
         progressDialog.setMessage("Please wait while loading");
         progressDialog.show();
 
-        refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.fragment_friends_swipeRefreshLayout);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new ContactsTask().execute(null, null);
-            }
-        });
-
         recyclerView = (RecyclerView) v.findViewById(R.id.fragment_friends_recyclerView);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -94,10 +84,11 @@ public class FriendsFragment extends Fragment implements SearchView.OnQueryTextL
 
         getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);
 
-        new ContactsTask().execute(null, null);
+        dbManager = LocalDbManager.getInstance();
+        dbManager.getFriends(getActivity().getApplicationContext(), this);
     }
 
-    private void populateList(ArrayList<FriendsBody> contacts) {
+    private void populateList(ArrayList<FriendsPostBody.Friend> contacts) {
 
         Log.i(TAG, "" + contacts.size());
 
@@ -105,7 +96,6 @@ public class FriendsFragment extends Fragment implements SearchView.OnQueryTextL
         Collections.sort(contactList, new FriendsComparator());
 
         progressDialog.dismiss();
-        refreshLayout.setRefreshing(false);
 
         adapter.setContacts(contacts);
         adapter.notifyDataSetChanged();
@@ -118,15 +108,15 @@ public class FriendsFragment extends Fragment implements SearchView.OnQueryTextL
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        final ArrayList<FriendsBody> filteredContactList = filter(newText);
+        final ArrayList<FriendsPostBody.Friend> filteredContactList = filter(newText);
         adapter.setContacts(filteredContactList);
         adapter.notifyDataSetChanged();
         return true;
     }
 
-    private ArrayList<FriendsBody> filter(String query) {
+    private ArrayList<FriendsPostBody.Friend> filter(String query) {
 
-        ArrayList<FriendsBody> builder = new ArrayList<>();
+        ArrayList<FriendsPostBody.Friend> builder = new ArrayList<>();
         for (int i = 0 ; i < contactList.size() ; i++) {
             if(contactList.get(i).getName().toLowerCase().contains(query.toLowerCase())) {
                 builder.add(contactList.get(i));
@@ -136,63 +126,14 @@ public class FriendsFragment extends Fragment implements SearchView.OnQueryTextL
         return  builder;
     }
 
-    private class ContactsTask extends AsyncTask<Void, Void, ArrayList<FriendsBody>> {
 
-        @Override
-        protected ArrayList<FriendsBody> doInBackground(Void... params) {
-
-            return fetchContacts();
-
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<FriendsBody> friendsBodies) {
-            super.onPostExecute(friendsBodies);
-
-            populateList(friendsBodies);
-        }
+    @Override
+    public void onFriendsDbGetSuccess(FriendsPostBody response) {
+        populateList(response.getFriends());
     }
 
-    private ArrayList<FriendsBody> fetchContacts() {
-
-        final Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
-        final String _ID = ContactsContract.Contacts._ID;
-        final String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
-        final String HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER;
-
-        final Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-        final String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
-        final String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
-
-        ArrayList<FriendsBody> result = new ArrayList<>();
-
-        Cursor cursor = getActivity().getContentResolver().query(CONTENT_URI, null, null, null, null);
-
-        if (cursor.getCount() > 0) {
-
-            while (cursor.moveToNext()) {
-
-                String contactId = cursor.getString(cursor.getColumnIndex(_ID));
-                String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
-                int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
-
-                if (hasPhoneNumber > 0) {
-
-                    FriendsBody newFriend = new FriendsBody(contactId, name);
-                    Cursor phoneCursor = getActivity().getContentResolver().query(PhoneCONTENT_URI, null, Phone_CONTACT_ID + " = ?", new String[]{contactId}, null);
-                    while (phoneCursor.moveToNext()) {
-                        String phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
-                        if (phoneNumber != null) {
-                            newFriend.addPhoneNumber(phoneNumber);
-                        }
-                    }
-                    phoneCursor.close();
-                    result.add(newFriend);
-                }
-            }
-            cursor.close();
-        }
-        return result;
+    @Override
+    public void onFriendsDbGetFailed() {
+        Toast.makeText(getActivity(), "Something went wrong. Please try again", Toast.LENGTH_SHORT).show();
     }
-
 }

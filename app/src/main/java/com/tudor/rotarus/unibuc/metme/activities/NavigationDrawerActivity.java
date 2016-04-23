@@ -29,6 +29,7 @@ import com.tudor.rotarus.unibuc.metme.fragments.CalendarFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.FriendsFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.HomeFragment;
 import com.tudor.rotarus.unibuc.metme.gcm.RegistrationIntentService;
+import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
 
 public class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -45,7 +46,8 @@ public class NavigationDrawerActivity extends AppCompatActivity
     }
 
     private void checkAuthentication() {
-        String token = ((MyApplication) getApplication()).readToken();
+        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance();
+        String token = sharedPreferencesManager.readToken(this);
         if(token != null && !token.equals("")) {
             Log.i(TAG, token);
         } else {
@@ -82,9 +84,9 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
         View header = navigationView.getHeaderView(0);
 
-        SharedPreferences prefs = getSharedPreferences(MyApplication.METME_SHARED_PREFERENCES, MODE_PRIVATE);
+        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance();
         TextView drawerTitleTextView = (TextView) header.findViewById(R.id.drawer_nav_header_title);
-        drawerTitleTextView.setText(prefs.getString("first_name", "") + " " + prefs.getString("last_name", ""));
+        drawerTitleTextView.setText(sharedPreferencesManager.readFirstName(this) + " " + sharedPreferencesManager.readLastName(this));
     }
 
     @Override

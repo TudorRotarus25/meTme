@@ -1,4 +1,4 @@
-package com.tudor.rotarus.unibuc.metme.pojos.interfaces;
+package com.tudor.rotarus.unibuc.metme.pojos.interfaces.network;
 
 /**
  * Created by Tudor on 30.03.2016.

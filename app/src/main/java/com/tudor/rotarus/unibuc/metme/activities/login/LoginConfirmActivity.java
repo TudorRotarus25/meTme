@@ -1,7 +1,6 @@
 package com.tudor.rotarus.unibuc.metme.activities.login;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,13 +12,16 @@ import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.activities.NavigationDrawerActivity;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
-import com.tudor.rotarus.unibuc.metme.pojos.interfaces.ActivateUserListener;
-import com.tudor.rotarus.unibuc.metme.pojos.requests.post.ActivateUserPostBody;
+import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.ActivateUserListener;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.post.ActivateUserPostBody;
 
 public class LoginConfirmActivity extends AppCompatActivity implements ActivateUserListener {
 
-    EditText codeEditText;
-    Button continueButton;
+    private EditText codeEditText;
+    private Button continueButton;
+
+    private SharedPreferencesManager sharedPreferencesManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,9 @@ public class LoginConfirmActivity extends AppCompatActivity implements ActivateU
     }
 
     private void initLayout() {
+
+        sharedPreferencesManager = SharedPreferencesManager.getInstance();
+
         codeEditText = (EditText) findViewById(R.id.activity_login_confirm_editText_code);
         continueButton = (Button) findViewById(R.id.activity_login_confirm_button_ok);
 
@@ -39,7 +44,7 @@ public class LoginConfirmActivity extends AppCompatActivity implements ActivateU
                 String code = codeEditText.getText().toString();
                 if (!code.isEmpty()) {
 
-                    int id = ((MyApplication) getApplication()).readId();
+                    int id = sharedPreferencesManager.readId(LoginConfirmActivity.this);
 
                     if(id < 0) {
                         Intent intent = new Intent(LoginConfirmActivity.this, LoginNameActivity.class);
@@ -60,7 +65,7 @@ public class LoginConfirmActivity extends AppCompatActivity implements ActivateU
     @Override
     public void onActivateUserSuccess(ActivateUserPostBody response) {
 
-        ((MyApplication) getApplication()).writeToken(response.getToken());
+        sharedPreferencesManager.writeToken(this, response.getToken());
 
         Intent intent = new Intent(LoginConfirmActivity.this, NavigationDrawerActivity.class);
         startActivity(intent);

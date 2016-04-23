@@ -2,25 +2,27 @@ package com.tudor.rotarus.unibuc.metme.managers;
 
 import android.util.Log;
 
-import com.tudor.rotarus.unibuc.metme.pojos.interfaces.ActivateUserListener;
-import com.tudor.rotarus.unibuc.metme.pojos.interfaces.CountriesListener;
-import com.tudor.rotarus.unibuc.metme.pojos.interfaces.CreateMeetingListener;
-import com.tudor.rotarus.unibuc.metme.pojos.interfaces.LoginListener;
-import com.tudor.rotarus.unibuc.metme.pojos.interfaces.MeetingListListener;
-import com.tudor.rotarus.unibuc.metme.pojos.interfaces.RefreshGcmTokenListener;
-import com.tudor.rotarus.unibuc.metme.pojos.requests.get.CountryGetBody;
-import com.tudor.rotarus.unibuc.metme.pojos.requests.get.MeetingsListGetBody;
-import com.tudor.rotarus.unibuc.metme.pojos.requests.post.ActivateUserPostBody;
-import com.tudor.rotarus.unibuc.metme.pojos.requests.post.CreateUserPostBody;
+import com.tudor.rotarus.unibuc.metme.pojos.requests.FriendsBody;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.ActivateUserListener;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.CountriesListener;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.CreateMeetingListener;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.FriendsListListener;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.LoginListener;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.MeetingListListener;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.RefreshGcmTokenListener;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.get.CountryGetBody;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingsListGetBody;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.post.ActivateUserPostBody;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.post.CreateUserPostBody;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.post.FriendsPostBody;
 import com.tudor.rotarus.unibuc.metme.rest.RestAPI;
 import com.tudor.rotarus.unibuc.metme.rest.RestClient;
 
 import java.util.ArrayList;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Tudor on 30.03.2016.
@@ -48,7 +50,7 @@ public class NetworkManager {
         Call<CreateUserPostBody> userPostCall = requestAPI.USER_POST_CALL(phoneNumber, firstName, lastName);
         userPostCall.enqueue(new Callback<CreateUserPostBody>() {
             @Override
-            public void onResponse(Response<CreateUserPostBody> response, Retrofit retrofit) {
+            public void onResponse(Call<CreateUserPostBody> call, Response<CreateUserPostBody> response) {
                 if(response != null){
                     if(response.body() != null && response.code() == 200) {
 
@@ -65,18 +67,18 @@ public class NetworkManager {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<CreateUserPostBody> call, Throwable t) {
                 callback.onLoginFailed();
                 Log.e(TAG, "Login failed");
             }
         });
     }
 
-    public void populateCoutryField(String locale, final CountriesListener callback) {
+    public void populateCountryField(String locale, final CountriesListener callback) {
         Call<CountryGetBody> getCountryDetailsCall = requestAPI.COUNTRY_GET_CALL(locale);
         getCountryDetailsCall.enqueue(new Callback<CountryGetBody>() {
             @Override
-            public void onResponse(Response<CountryGetBody> response, Retrofit retrofit) {
+            public void onResponse(Call<CountryGetBody> call, Response<CountryGetBody> response) {
                 if(response.body() != null && response.code() == 200){
                     callback.onCountryPopulateSuccess(response.body());
                 } else {
@@ -86,7 +88,7 @@ public class NetworkManager {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<CountryGetBody> call, Throwable t) {
                 callback.onCountryPopulateFailure();
                 Log.e(TAG, "Country population failed: " + t.getMessage());
             }
@@ -97,7 +99,7 @@ public class NetworkManager {
         Call<ActivateUserPostBody> call = requestAPI.ACTIVATE_USER_POST_CALL(userId, code);
         call.enqueue(new Callback<ActivateUserPostBody>() {
             @Override
-            public void onResponse(Response<ActivateUserPostBody> response, Retrofit retrofit) {
+            public void onResponse(Call<ActivateUserPostBody> call, Response<ActivateUserPostBody> response) {
                 if (response != null) {
                     if (response.code() == 200) {
                         if(response.body() != null){
@@ -115,9 +117,30 @@ public class NetworkManager {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<ActivateUserPostBody> call, Throwable t) {
                 callback.onActivateUserFailed();
                 Log.e(TAG, "Activate call failed - " + t.getMessage());
+            }
+        });
+    }
+
+    public void listFriends(FriendsBody contacts, final FriendsListListener callback) {
+        Call<FriendsPostBody> call = requestAPI.FRIENDS_LIST_POST_CALL(contacts);
+        call.enqueue(new Callback<FriendsPostBody>() {
+            @Override
+            public void onResponse(Call<FriendsPostBody> call, Response<FriendsPostBody> response) {
+                if(response != null && response.body() != null && response.code() == 200) {
+                    callback.onFriendsListSuccess(response.body());
+                } else {
+                    Log.e(TAG, "List friends failed: " + (response != null ? response.message() : null));
+                    callback.onFriendsListFailed();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FriendsPostBody> call, Throwable t) {
+                Log.e(TAG, "List friends failed: " + t.getMessage());
+                callback.onFriendsListFailed();
             }
         });
     }
@@ -127,7 +150,7 @@ public class NetworkManager {
         Call<Void> createMeetingCall = requestAPI.MEETING_POST_CALL(name, fromTime, toTime, notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, authorId, meetingType, members);
         createMeetingCall.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Response<Void> response, Retrofit retrofit) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response != null && response.code() == 200) {
                     callback.onCreateMeetingSuccess();
                 } else {
@@ -137,7 +160,7 @@ public class NetworkManager {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 Log.e(TAG, t.getMessage().toString());
                 callback.onCreateMeetingFailed();
             }
@@ -148,7 +171,7 @@ public class NetworkManager {
         Call<MeetingsListGetBody> call = requestAPI.MEETINGS_LIST_GET_CALL(userId);
         call.enqueue(new Callback<MeetingsListGetBody>() {
             @Override
-            public void onResponse(Response<MeetingsListGetBody> response, Retrofit retrofit) {
+            public void onResponse(Call<MeetingsListGetBody> call, Response<MeetingsListGetBody> response) {
                 if (response != null && response.code() == 200 && response.body() != null) {
 
                     callback.onListAllMeetingsSuccess(response.body());
@@ -160,7 +183,7 @@ public class NetworkManager {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<MeetingsListGetBody> call, Throwable t) {
                 callback.onListAllMeetingsFailed();
                 Log.e(TAG, t.getMessage());
             }
@@ -171,7 +194,7 @@ public class NetworkManager {
         Call<Void> call = requestAPI.GCM_REFRESH_TOKEN_POST_CALL(userId, token);
         call.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Response<Void> response, Retrofit retrofit) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response != null && response.code() == 200) {
                     callback.onTokenRefreshSuccess();
                 } else {
@@ -181,7 +204,7 @@ public class NetworkManager {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 callback.onTokenRefreshFailed();
                 Log.e(TAG, "Refresh gcm token failed: " + t.getMessage());
             }

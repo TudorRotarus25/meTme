@@ -1,4 +1,4 @@
-package com.tudor.rotarus.unibuc.metme.pojos.requests.get;
+package com.tudor.rotarus.unibuc.metme.pojos.responses.get;
 
 import java.util.ArrayList;
 

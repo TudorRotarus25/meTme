@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -28,9 +27,9 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
-import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
-import com.tudor.rotarus.unibuc.metme.pojos.interfaces.CreateMeetingListener;
+import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.CreateMeetingListener;
 import com.tudor.rotarus.unibuc.metme.views.dialogs.AddMeetingNotificationDialog;
 import com.tudor.rotarus.unibuc.metme.views.dialogs.AddMeetingTransportDialog;
 
@@ -348,7 +347,8 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
     }
 
     private int getUserId() {
-        return ((MyApplication) getApplication()).readId();
+        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance();
+        return sharedPreferencesManager.readId(this);
     }
 
     @Override
