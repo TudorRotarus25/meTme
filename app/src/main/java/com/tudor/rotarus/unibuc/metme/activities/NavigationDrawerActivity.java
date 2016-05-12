@@ -1,9 +1,11 @@
 package com.tudor.rotarus.unibuc.metme.activities;
 
+import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -19,8 +21,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
@@ -28,21 +30,55 @@ import com.tudor.rotarus.unibuc.metme.fragments.AllMeetingsFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.CalendarFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.FriendsFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.HomeFragment;
-import com.tudor.rotarus.unibuc.metme.gcm.RegistrationIntentService;
 import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
+
+import static android.support.v4.app.ActivityCompat.requestPermissions;
 
 public class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "NavigationDrawerActivity";
 
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+
+    private SharedPreferencesManager sharedPreferencesManager;
+
+    private FloatingActionMenu fam;
+    private FloatingActionButton createMeetingFab;
+    private FloatingActionButton createPickupFab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         checkAuthentication();
+        checkPermissions();
         initLayout();
 
+    }
+
+    private void checkPermissions() {
+        //read contacts permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+        } else {
+            ((MyApplication) getApplication()).refreshFriendList();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                checkPermissions();
+            } else {
+                Toast.makeText(this, "Until you grant the permission, we cannot display the names", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void checkAuthentication() {
@@ -62,10 +98,13 @@ public class NavigationDrawerActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fam = (FloatingActionMenu) findViewById(R.id.fab);
+        createMeetingFab = (FloatingActionButton) findViewById(R.id.fab_add_meeting);
+        createPickupFab = (FloatingActionButton) findViewById(R.id.fab_add_pickup);
+
+        createMeetingFab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 Intent intent = new Intent(NavigationDrawerActivity.this, AddMeetingActivity.class);
                 startActivity(intent);
             }
@@ -84,7 +123,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
         View header = navigationView.getHeaderView(0);
 
-        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance();
+        sharedPreferencesManager = SharedPreferencesManager.getInstance();
         TextView drawerTitleTextView = (TextView) header.findViewById(R.id.drawer_nav_header_title);
         drawerTitleTextView.setText(sharedPreferencesManager.readFirstName(this) + " " + sharedPreferencesManager.readLastName(this));
     }

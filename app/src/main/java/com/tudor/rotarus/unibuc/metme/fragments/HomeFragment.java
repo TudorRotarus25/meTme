@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionMenu;
 import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingGetBody;
@@ -22,8 +23,8 @@ public class HomeFragment extends Fragment {
 
     private TextView titleTextView;
     private TextView locationTextView;
-    private FloatingActionButton transportationButton;
-    private FloatingActionButton optionsButton;
+    private FloatingActionMenu transportationButton;
+    private FloatingActionMenu optionsButton;
     private ArcProgress arcProgress;
     private RecyclerView recyclerView;
 
@@ -51,8 +52,8 @@ public class HomeFragment extends Fragment {
 
         titleTextView = (TextView) view.findViewById(R.id.fragment_home_title_textView);
         locationTextView = (TextView) view.findViewById(R.id.fragment_home_location_textView);
-        transportationButton = (FloatingActionButton) view.findViewById(R.id.fragment_home_transportation_button);
-        optionsButton = (FloatingActionButton) view.findViewById(R.id.fragment_home_options_button);
+        transportationButton = (FloatingActionMenu) view.findViewById(R.id.fragment_home_transportation_button);
+        optionsButton = (FloatingActionMenu) view.findViewById(R.id.fragment_home_options_button);
         recyclerView = (RecyclerView) view.findViewById(R.id.fragment_home_participants_recyclerView);
 
         arcProgress = (ArcProgress) view.findViewById(R.id.fragment_home_progress_bar);

@@ -1,39 +1,39 @@
 package com.tudor.rotarus.unibuc.metme;
 
+import android.Manifest;
 import android.app.Application;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.tudor.rotarus.unibuc.metme.db.DatabaseHelper;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
-import com.tudor.rotarus.unibuc.metme.pojos.requests.FriendsBody;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.FriendsListListener;
+import com.tudor.rotarus.unibuc.metme.pojos.requests.FriendsBody;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.post.FriendsPostBody;
 
 import java.util.ArrayList;
+
+import static android.support.v4.app.ActivityCompat.requestPermissions;
 
 /**
  * Created by Tudor on 29.02.2016.
  */
 public class MyApplication extends Application {
 
-    public final String TAG = this.getClass().getSimpleName(); //"MyApplication";
+    public final String TAG = this.getClass().getSimpleName();
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        refreshFriendList();
-
     }
 
-
-
-    private void refreshFriendList() {
+    public void refreshFriendList() {
         new ContactsTask().execute();
     }
 

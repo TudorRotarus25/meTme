@@ -43,5 +43,6 @@
     <dimen name="all_meetings_cardView_inner_padding_horizontal">10dp</dimen>
     <dimen name="list_friends_circle_size">60dp</dimen>
     <dimen name="list_friends_text_size">17sp</dimen>
+    <dimen name="fragment_home_fab_padding_out">20dp</dimen>
 
 </resources>

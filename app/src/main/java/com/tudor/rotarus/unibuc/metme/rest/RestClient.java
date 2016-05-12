@@ -24,7 +24,7 @@ public class RestClient {
     public RestClient() {
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        logging.setLevel(HttpLoggingInterceptor.Level.NONE);
 
         OkHttpClient.Builder client = new OkHttpClient.Builder();
         client.interceptors().add(new Interceptor() {
@@ -37,21 +37,6 @@ public class RestClient {
                 return response;
             }
         });
-//        client.interceptors()
-//                .add(new Interceptor() {
-//                    @Override
-//                    public Response intercept(Interceptor.Chain chain) throws IOException {
-//
-//                        Request request = chain.request();
-//                        Log.i(TAG, request.body().toString());
-//
-//                        Response response = chain.proceed(chain.request());
-//
-//                        Log.i(TAG, response.code() + " - " + chain.request().urlString());
-//
-//                        return response;
-//                    }
-//                });
         client.addInterceptor(logging);
 
         Retrofit retrofit = new Retrofit.Builder()

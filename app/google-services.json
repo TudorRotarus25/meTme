@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_id": "axial-canto-125213",
+    "project_number": "71490785062",
+    "name": "meTme"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71490785062:android:3457121ae58c4dd5",
+        "client_id": "android:com.tudor.rotarus.unibuc.metme",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.tudor.rotarus.unibuc.metme",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 2,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 1
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

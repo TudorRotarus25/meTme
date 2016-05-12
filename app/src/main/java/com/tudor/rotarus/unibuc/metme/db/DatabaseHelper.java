@@ -3,6 +3,7 @@ package com.tudor.rotarus.unibuc.metme.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -48,27 +49,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
         db.execSQL(CREATE_TABLE_CONTACTS);
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.i(TAG, "Upgraded DB from version " + oldVersion + " to " + newVersion);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
         onCreate(db);
     }
 
     public void insertContact(FriendsPostBody.Friend contact) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(KEY_ID, contact.getId());
-        values.put(KEY_PHONE_NUMBER, contact.getPhoneNumber());
-        values.put(KEY_NAME, contact.getName());
-        values.put(KEY_INITIALS, contact.getInitials());
+            ContentValues values = new ContentValues();
+            values.put(KEY_ID, contact.getId());
+            values.put(KEY_PHONE_NUMBER, contact.getPhoneNumber());
+            values.put(KEY_NAME, contact.getName());
+            values.put(KEY_INITIALS, contact.getInitials());
 
-        db.insert(TABLE_CONTACTS, null, values);
+            db.insertOrThrow(TABLE_CONTACTS, null, values);
+        } catch (SQLiteConstraintException e) {
+            Log.e(TAG, "Could not insert into db");
+        }
     }
 
     public void insertAllContacts(FriendsPostBody contacts) {
