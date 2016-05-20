@@ -12,6 +12,7 @@ import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingsListGetBody;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -90,6 +91,10 @@ public class AllMeetingsListAdapter extends RecyclerView.Adapter<AllMeetingsList
     }
 
     public void setMeetings(List<MeetingsListGetBody.Meeting> meetings) {
-        this.meetings = meetings;
+        if (meetings != null) {
+            this.meetings = meetings;
+        } else {
+            this.meetings = new ArrayList<>();
+        }
     }
 }

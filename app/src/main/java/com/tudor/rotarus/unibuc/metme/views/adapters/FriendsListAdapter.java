@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.post.FriendsPostBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,7 +57,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     }
 
     public void setContacts(List<FriendsPostBody.Friend> contacts) {
-        this.contacts = contacts;
+        if (contacts != null) {
+            this.contacts = contacts;
+        } else {
+            this.contacts = new ArrayList<>();
+        }
     }
 
     @Override

@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by Tudor on 11.04.2016.
  */
-public class HomeParticipantsListAdapter extends RecyclerView.Adapter<HomeParticipantsListAdapter.ParticipantsViewHolder>{
+public class HomeParticipantsListAdapter extends RecyclerView.Adapter<HomeParticipantsListAdapter.ParticipantsViewHolder> {
 
     private List<MeetingGetBody.Participant> participants;
 
@@ -33,7 +33,11 @@ public class HomeParticipantsListAdapter extends RecyclerView.Adapter<HomePartic
     }
 
     public void setParticipants(List<MeetingGetBody.Participant> participants) {
-        this.participants = participants;
+        if (participants != null) {
+            this.participants = participants;
+        } else {
+            this.participants = new ArrayList<>();
+        }
     }
 
     @Override
@@ -46,7 +50,7 @@ public class HomeParticipantsListAdapter extends RecyclerView.Adapter<HomePartic
     @Override
     public void onBindViewHolder(ParticipantsViewHolder holder, int position) {
         holder.nameTextView.setText(participants.get(position).getName());
-        if(participants.get(position).getEta() != null) {
+        if (participants.get(position).getEta() != null) {
             holder.etaTextView.setText(participants.get(position).getEta() + " m");
             holder.icon.setProgress((participants.get(position).getEta() * 6));
         }
@@ -58,7 +62,7 @@ public class HomeParticipantsListAdapter extends RecyclerView.Adapter<HomePartic
     }
 
     public class ParticipantsViewHolder extends RecyclerView.ViewHolder {
-        
+
         private CircleProgressView icon;
         private TextView nameTextView;
         private TextView etaTextView;

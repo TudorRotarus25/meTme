@@ -58,7 +58,11 @@ public class MeetingParticipantsDialogAdapter extends RecyclerView.Adapter<Meeti
     }
 
     public void setContacts(List<FriendsPostBody.Friend> contacts) {
-        this.contacts = contacts;
+        if (contacts != null) {
+            this.contacts = contacts;
+        } else {
+            this.contacts = new ArrayList<>();
+        }
     }
 
     @Override
