@@ -10,16 +10,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.tudor.rotarus.unibuc.metme.R;
+import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
+import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.MeetingDetailsListener;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingGetBody;
 import com.tudor.rotarus.unibuc.metme.views.adapters.HomeParticipantsListAdapter;
 
 import java.util.ArrayList;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements MeetingDetailsListener {
 
     private TextView titleTextView;
     private TextView locationTextView;
@@ -30,6 +34,8 @@ public class HomeFragment extends Fragment {
 
     private ArrayList<MeetingGetBody.Participant> participantsList;
     private HomeParticipantsListAdapter participantsAdapter;
+
+    private NetworkManager networkManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,7 +63,7 @@ public class HomeFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.fragment_home_participants_recyclerView);
 
         arcProgress = (ArcProgress) view.findViewById(R.id.fragment_home_progress_bar);
-        arcProgress.setProgress(65);
+//        arcProgress.setProgress(65);
         arcProgress.setBottomText("ETA");
         arcProgress.setSuffixText("m");
 //        arcProgress.setDrawingCacheBackgroundColor(Color.WHITE);
@@ -71,14 +77,39 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         participantsList = new ArrayList<>();
-        for(int i=0;i<3;i++) {
-            MeetingGetBody.Participant newParticipant = new MeetingGetBody().new Participant(i, "Tudor Rotarus " + i, 30);
-            participantsList.add(newParticipant);
-        }
+//        for(int i=0;i<3;i++) {
+//            MeetingGetBody.Participant newParticipant = new MeetingGetBody().new Participant(i, "Tudor Rotarus " + i, 30);
+//            participantsList.add(newParticipant);
+//        }
         participantsAdapter = new HomeParticipantsListAdapter(participantsList);
         recyclerView.setAdapter(participantsAdapter);
 
         getActivity().findViewById(R.id.fab).setVisibility(View.GONE);
 
+        int userId = SharedPreferencesManager.getInstance().readId(getContext());
+
+        networkManager = NetworkManager.getInstance();
+        networkManager.getNextMeetingDetails(userId, this);
+    }
+
+    @Override
+    public void onFetchMeetingDetailsSuccess(MeetingGetBody response) {
+        if(response.getEta() != null) {
+            arcProgress.setProgress(response.getEta());
+        }
+        participantsAdapter.setParticipants(response.getParticipants());
+        titleTextView.setText(response.getName());
+        locationTextView.setText(String.format("at %s - %s", response.getPlaceName(), response.getFromTime()));
+        participantsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onFetchMeetingDetailsEmptyResponse() {
+
+    }
+
+    @Override
+    public void onFetchMeetingDetailsFailed() {
+        Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
     }
 }

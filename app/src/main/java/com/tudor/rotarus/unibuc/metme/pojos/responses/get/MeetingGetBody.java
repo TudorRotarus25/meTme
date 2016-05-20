@@ -13,10 +13,10 @@ public class MeetingGetBody {
     String toTime;
     String placeName;
     int transportationMethod;
-    String eta;
+    Integer eta;
     ArrayList<Participant> participants;
 
-    public MeetingGetBody(int id, String name, String fromTime, String toTime, String placeName, int transportationMethod, String eta, ArrayList<Participant> participants) {
+    public MeetingGetBody(int id, String name, String fromTime, String toTime, String placeName, int transportationMethod, Integer eta, ArrayList<Participant> participants) {
         this.id = id;
         this.name = name;
         this.fromTime = fromTime;
@@ -78,11 +78,11 @@ public class MeetingGetBody {
         this.transportationMethod = transportationMethod;
     }
 
-    public String getEta() {
+    public Integer getEta() {
         return eta;
     }
 
-    public void setEta(String eta) {
+    public void setEta(Integer eta) {
         this.eta = eta;
     }
 
@@ -97,11 +97,11 @@ public class MeetingGetBody {
     public class Participant {
         int id;
         String name;
-        int eta;
+        Integer eta;
         String initials;
         String phoneNumber;
 
-        public Participant(int id, String name, int eta) {
+        public Participant(int id, String name, Integer eta) {
             this.id = id;
             this.name = name;
             this.eta = eta;
@@ -126,11 +126,11 @@ public class MeetingGetBody {
             this.name = name;
         }
 
-        public int getEta() {
+        public Integer getEta() {
             return eta;
         }
 
-        public void setEta(int eta) {
+        public void setEta(Integer eta) {
             this.eta = eta;
         }
     }

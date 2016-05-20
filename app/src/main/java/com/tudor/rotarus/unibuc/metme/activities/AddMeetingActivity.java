@@ -31,7 +31,9 @@ import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
 import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.CreateMeetingListener;
 import com.tudor.rotarus.unibuc.metme.views.dialogs.AddMeetingNotificationDialog;
+import com.tudor.rotarus.unibuc.metme.views.dialogs.AddMeetingParticipantsDialog;
 import com.tudor.rotarus.unibuc.metme.views.dialogs.AddMeetingTransportDialog;
+import com.tudor.rotarus.unibuc.metme.views.dialogs.AddMeetingTypeDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,10 +54,12 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
     private TextView timeStartTimeText;
     private TextView timeEndTimeText;
     private TextView notificationText;
+    private TextView meetingTypeText;
     private TextView addMembersText;
 
     private LinearLayout transportContainer;
     private LinearLayout notificationContainer;
+    private LinearLayout meetingTypeContainer;
     private LinearLayout addMembersContainer;
 
     private Calendar fromTime;
@@ -73,6 +77,7 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
 
     private AddMeetingNotificationDialog notificationDialog;
     private AddMeetingTransportDialog transportDialog;
+    private AddMeetingTypeDialog meetingTypeDialog;
     private ProgressDialog progressDialog;
 
     private SimpleDateFormat dateFormatter;
@@ -81,6 +86,7 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
 
     private int transportMethod = 0;
     private int notifyTime = 15;
+    private int meetingType = 0;
 
 
     private void createMeeting() {
@@ -96,7 +102,7 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
             progressDialog.show();
 
             NetworkManager networkManager = NetworkManager.getInstance();
-            networkManager.createMeeting(name, callDateTimeFormatter.format(fromTime.getTime()), callDateTimeFormatter.format(toTime.getTime()), notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, getUserId(), 15, new ArrayList<Integer>(), this);
+            networkManager.createMeeting(name, callDateTimeFormatter.format(fromTime.getTime()), callDateTimeFormatter.format(toTime.getTime()), notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, getUserId(), meetingType, new ArrayList<Integer>(), this);
 
         } else {
             if(name.isEmpty()) {
@@ -144,10 +150,12 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
         timeStartTimeText = (TextView) findViewById(R.id.activity_add_meeting_start_time_text);
         timeEndTimeText = (TextView) findViewById(R.id.activity_add_meeting_end_time_text);
         notificationText = (TextView) findViewById(R.id.activity_add_meeting_notification_text);
+        meetingTypeText = (TextView) findViewById(R.id.activity_add_meeting_type_text);
         addMembersText = (TextView) findViewById(R.id.activity_add_meeting_add_people_text);
 
         transportContainer = (LinearLayout) findViewById(R.id.activity_add_meeting_transport_container);
         notificationContainer = (LinearLayout) findViewById(R.id.activity_add_meeting_notification_container);
+        meetingTypeContainer = (LinearLayout) findViewById(R.id.activity_add_meeting_type_container);
         addMembersContainer = (LinearLayout) findViewById(R.id.activity_add_meeting_add_people_container);
 
         initPickers();
@@ -227,6 +235,29 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
             @Override
             public void onClick(View v) {
                 notificationDialog.show(getFragmentManager(), TAG);
+            }
+        });
+
+        meetingTypeDialog = new AddMeetingTypeDialog();
+        meetingTypeDialog.setDialogListener(new AddMeetingTypeDialog.DialogListener() {
+            @Override
+            public void onItemClick(int selectedIndex) {
+                meetingTypeText.setText(getResources().getStringArray(R.array.meeting_types)[selectedIndex]);
+                meetingType = selectedIndex;
+            }
+        });
+        meetingTypeContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                meetingTypeDialog.show(getFragmentManager(), TAG);
+            }
+        });
+
+        addMembersContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddMeetingParticipantsDialog dialog = AddMeetingParticipantsDialog.newInstance(null);
+                dialog.show(getFragmentManager(), TAG);
             }
         });
     }

@@ -2,6 +2,7 @@ package com.tudor.rotarus.unibuc.metme.managers;
 
 import android.util.Log;
 
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.MeetingDetailsListener;
 import com.tudor.rotarus.unibuc.metme.pojos.requests.FriendsBody;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.ActivateUserListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.CountriesListener;
@@ -11,6 +12,7 @@ import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.LoginListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.MeetingListListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.RefreshGcmTokenListener;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.get.CountryGetBody;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingGetBody;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingsListGetBody;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.post.ActivateUserPostBody;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.post.CreateUserPostBody;
@@ -47,12 +49,12 @@ public class NetworkManager {
     }
 
     public void login(String phoneNumber, String firstName, String lastName, final LoginListener callback) {
-        Call<CreateUserPostBody> userPostCall = requestAPI.USER_POST_CALL(phoneNumber, firstName, lastName);
+        Call<CreateUserPostBody> userPostCall = requestAPI.createUser(phoneNumber, firstName, lastName);
         userPostCall.enqueue(new Callback<CreateUserPostBody>() {
             @Override
             public void onResponse(Call<CreateUserPostBody> call, Response<CreateUserPostBody> response) {
-                if(response != null){
-                    if(response.body() != null && response.code() == 200) {
+                if (response != null) {
+                    if (response.body() != null && response.code() == 200) {
 
                         callback.onLoginSuccess(response.body());
 
@@ -75,11 +77,11 @@ public class NetworkManager {
     }
 
     public void populateCountryField(String locale, final CountriesListener callback) {
-        Call<CountryGetBody> getCountryDetailsCall = requestAPI.COUNTRY_GET_CALL(locale);
+        Call<CountryGetBody> getCountryDetailsCall = requestAPI.getCountries(locale);
         getCountryDetailsCall.enqueue(new Callback<CountryGetBody>() {
             @Override
             public void onResponse(Call<CountryGetBody> call, Response<CountryGetBody> response) {
-                if(response.body() != null && response.code() == 200){
+                if (response.body() != null && response.code() == 200) {
                     callback.onCountryPopulateSuccess(response.body());
                 } else {
                     callback.onCountryPopulateFailure();
@@ -96,13 +98,13 @@ public class NetworkManager {
     }
 
     public void activateUser(int userId, String code, final ActivateUserListener callback) {
-        Call<ActivateUserPostBody> call = requestAPI.ACTIVATE_USER_POST_CALL(userId, code);
+        Call<ActivateUserPostBody> call = requestAPI.activateUser(userId, code);
         call.enqueue(new Callback<ActivateUserPostBody>() {
             @Override
             public void onResponse(Call<ActivateUserPostBody> call, Response<ActivateUserPostBody> response) {
                 if (response != null) {
                     if (response.code() == 200) {
-                        if(response.body() != null){
+                        if (response.body() != null) {
                             callback.onActivateUserSuccess(response.body());
 
                         } else {
@@ -125,11 +127,11 @@ public class NetworkManager {
     }
 
     public void listFriends(FriendsBody contacts, final FriendsListListener callback) {
-        Call<FriendsPostBody> call = requestAPI.FRIENDS_LIST_POST_CALL(contacts);
+        Call<FriendsPostBody> call = requestAPI.getFriends(contacts);
         call.enqueue(new Callback<FriendsPostBody>() {
             @Override
             public void onResponse(Call<FriendsPostBody> call, Response<FriendsPostBody> response) {
-                if(response != null && response.body() != null && response.code() == 200) {
+                if (response != null && response.body() != null && response.code() == 200) {
                     callback.onFriendsListSuccess(response.body());
                 } else {
                     Log.e(TAG, "List friends failed: " + (response != null ? response.message() : null));
@@ -147,11 +149,11 @@ public class NetworkManager {
 
     public void createMeeting(String name, String fromTime, String toTime, int notifyTime, Double locationLat, Double locationLon, String locationName, String locationAddress, int transportMethod, int authorId, int meetingType, ArrayList<Integer> members, final CreateMeetingListener callback) {
         // TODO: add members, hardcoded type
-        Call<Void> createMeetingCall = requestAPI.MEETING_POST_CALL(name, fromTime, toTime, notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, authorId, meetingType, members);
+        Call<Void> createMeetingCall = requestAPI.createMeeting(name, fromTime, toTime, notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, authorId, meetingType, members);
         createMeetingCall.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response != null && response.code() == 200) {
+                if (response != null && response.code() == 200) {
                     callback.onCreateMeetingSuccess();
                 } else {
                     Log.e(TAG, "Create meeting failed");
@@ -167,8 +169,53 @@ public class NetworkManager {
         });
     }
 
+    public void getNextMeetingDetails(int userId, final MeetingDetailsListener callback) {
+        Call<MeetingGetBody> call = requestAPI.getNextMeetingDetails(userId);
+        call.enqueue(new Callback<MeetingGetBody>() {
+            @Override
+            public void onResponse(Call<MeetingGetBody> call, Response<MeetingGetBody> response) {
+                if (response != null && response.body() != null && response.code() == 200) {
+                    callback.onFetchMeetingDetailsSuccess(response.body());
+                } else if (response != null && response.code() == 204) {
+                    callback.onFetchMeetingDetailsEmptyResponse();
+                } else {
+                    Log.e(TAG, "getNextMeetingDetails failed: " + response.code());
+                    callback.onFetchMeetingDetailsFailed();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MeetingGetBody> call, Throwable t) {
+                Log.e(TAG, "getNextMeetingDetails failed: " + t.getMessage());
+                callback.onFetchMeetingDetailsFailed();
+            }
+        });
+    }
+
+    public void getMeetingDetails(int meetingId, final MeetingDetailsListener callback) {
+        Call<MeetingGetBody> call = requestAPI.getMeetingDetails(meetingId);
+        call.enqueue(new Callback<MeetingGetBody>() {
+            @Override
+            public void onResponse(Call<MeetingGetBody> call, Response<MeetingGetBody> response) {
+                if (response != null && response.body() != null && response.code() == 200) {
+                    callback.onFetchMeetingDetailsSuccess(response.body());
+                } else {
+                    Log.e(TAG, "getNextMeetingDetails failed: " + response.code());
+                    callback.onFetchMeetingDetailsFailed();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MeetingGetBody> call, Throwable t) {
+                Log.e(TAG, "getNextMeetingDetails failed: " + t.getMessage());
+                callback.onFetchMeetingDetailsFailed();
+            }
+        });
+    }
+
     public void listAllMeetings(int userId, final MeetingListListener callback) {
-        Call<MeetingsListGetBody> call = requestAPI.MEETINGS_LIST_GET_CALL(userId);
+        Call<MeetingsListGetBody> call = requestAPI.getAllMeetings(userId);
         call.enqueue(new Callback<MeetingsListGetBody>() {
             @Override
             public void onResponse(Call<MeetingsListGetBody> call, Response<MeetingsListGetBody> response) {
@@ -191,11 +238,11 @@ public class NetworkManager {
     }
 
     public void refreshGcmToken(int userId, String token, final RefreshGcmTokenListener callback) {
-        Call<Void> call = requestAPI.GCM_REFRESH_TOKEN_POST_CALL(userId, token);
+        Call<Void> call = requestAPI.refreshGcmToken(userId, token);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response != null && response.code() == 200) {
+                if (response != null && response.code() == 200) {
                     callback.onTokenRefreshSuccess();
                 } else {
                     callback.onTokenRefreshFailed();

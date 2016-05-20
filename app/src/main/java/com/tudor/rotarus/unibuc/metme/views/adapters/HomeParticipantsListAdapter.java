@@ -46,8 +46,10 @@ public class HomeParticipantsListAdapter extends RecyclerView.Adapter<HomePartic
     @Override
     public void onBindViewHolder(ParticipantsViewHolder holder, int position) {
         holder.nameTextView.setText(participants.get(position).getName());
-        holder.etaTextView.setText(participants.get(position).getEta() + " m");
-        holder.icon.setProgress((int)(participants.get(position).getEta() * 6));
+        if(participants.get(position).getEta() != null) {
+            holder.etaTextView.setText(participants.get(position).getEta() + " m");
+            holder.icon.setProgress((participants.get(position).getEta() * 6));
+        }
     }
 
     @Override

@@ -9,4 +9,5 @@
     <color name="btn">#1976D2</color>
     <color name="fab_icon_tint">#fff</color>
     <color name="fragment_home_top_text_color">#E1F5FE</color>
+    <color name="search_background">#e4dddd</color>
 </resources>

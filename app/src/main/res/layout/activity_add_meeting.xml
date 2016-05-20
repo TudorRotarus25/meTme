@@ -118,6 +118,38 @@
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"/>
 
+    <LinearLayout android:id="@+id/activity_add_meeting_type_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/add_meeting_vertical_padding"
+        android:paddingBottom="@dimen/add_meeting_vertical_padding"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tint="@color/colorPrimary"
+            android:src="@drawable/ic_compare_arrows_black_24dp"/>
+
+        <TextView android:id="@+id/activity_add_meeting_type_text"
+            android:text="Casual"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/add_meeting_horizontal_margin"
+            android:layout_marginRight="@dimen/add_meeting_horizontal_margin"
+            android:layout_weight="9"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
     <LinearLayout android:id="@+id/activity_add_meeting_time_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

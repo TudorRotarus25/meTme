@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/content_add_meeting_participants_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/content_add_meeting_participants_margin_vertical"
+        android:layout_marginBottom="@dimen/content_add_meeting_participants_margin_vertical"
+        android:text="Add participants"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_extra_big"
+        android:textAlignment="center"/>
+
+    <EditText
+        android:id="@+id/content_add_meeting_participants_search_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/search_margin_horizontal"
+        android:layout_marginLeft="@dimen/search_margin_horizontal"
+        android:paddingTop="@dimen/search_vertical_padding"
+        android:paddingBottom="@dimen/search_vertical_padding"
+        android:layout_below="@+id/content_add_meeting_participants_title"
+        android:layout_marginBottom="@dimen/content_add_meeting_participants_margin_vertical"
+        android:drawableLeft="@drawable/ic_search_black_24dp"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/content_add_meeting_participants_swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/content_add_meeting_participants_search_editText"
+        android:layout_alignParentBottom="true">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/content_add_meeting_participants_recyclerView"
+            android:scrollbars="vertical"
+            android:paddingBottom="5dp"
+            android:clipToPadding="false"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</RelativeLayout>

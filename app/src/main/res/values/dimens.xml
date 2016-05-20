@@ -44,5 +44,9 @@
     <dimen name="list_friends_circle_size">60dp</dimen>
     <dimen name="list_friends_text_size">17sp</dimen>
     <dimen name="fragment_home_fab_padding_out">20dp</dimen>
+    <dimen name="text_extra_big">25sp</dimen>
+    <dimen name="content_add_meeting_participants_margin_vertical">20dp</dimen>
+    <dimen name="search_margin_horizontal">40dp</dimen>
+    <dimen name="search_vertical_padding">5dp</dimen>
 
 </resources>
