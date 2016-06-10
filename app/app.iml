@@ -152,8 +152,8 @@
     <orderEntry type="library" exported="" name="play-services-games-8.3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-vision-8.3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-base-8.3.0" level="project" />
-    <orderEntry type="library" exported="" name="okio-1.6.0" level="project" />
     <orderEntry type="library" exported="" name="gson-2.6.1" level="project" />
+    <orderEntry type="library" exported="" name="okio-1.6.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-appindexing-8.3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-auth-8.3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-drive-8.3.0" level="project" />

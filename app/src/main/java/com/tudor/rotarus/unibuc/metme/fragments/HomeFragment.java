@@ -1,39 +1,66 @@
 package com.tudor.rotarus.unibuc.metme.fragments;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.tudor.rotarus.unibuc.metme.R;
+import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
-import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
+import com.tudor.rotarus.unibuc.metme.managers.MySharedPreferencesManager;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.MeetingDetailsListener;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.UpdateTransportationListener;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingGetBody;
 import com.tudor.rotarus.unibuc.metme.views.adapters.HomeParticipantsListAdapter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
-public class HomeFragment extends Fragment implements MeetingDetailsListener {
+public class HomeFragment extends Fragment implements MeetingDetailsListener, UpdateTransportationListener {
+
+    private final String TAG = getClass().getSimpleName();
+
+    private RelativeLayout wrapper;
+    private TextView emptyRespnseMessageTextView;
 
     private TextView titleTextView;
     private TextView locationTextView;
     private FloatingActionMenu transportationButton;
     private FloatingActionMenu optionsButton;
+    private FloatingActionButton transportationCar;
+    private FloatingActionButton transportationBus;
+    private FloatingActionButton transportationWalk;
+    private FloatingActionButton postponeMeetingFab;
+    private FloatingActionButton cancelMeetingFab;
     private ArcProgress arcProgress;
     private RecyclerView recyclerView;
 
     private ArrayList<MeetingGetBody.Participant> participantsList;
     private HomeParticipantsListAdapter participantsAdapter;
+
+    private Integer userId;
+    private Integer meetingId;
+    private int currentTransportationMethod;
+
+    private AlertDialog confirmDialog;
 
     private NetworkManager networkManager;
 
@@ -43,73 +70,211 @@ public class HomeFragment extends Fragment implements MeetingDetailsListener {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        if (arcProgress != null) {
+            arcProgress.setBottomText("ETA");
+        }
+
+        if(userId != null && networkManager != null) {
+            networkManager.getNextMeetingDetails(userId, this);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        init(view);
+        initLayout(view);
+        initDialogs();
 
         return view;
     }
 
-    private void init(View view) {
+    private void initDialogs() {
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Next meeting");
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setMessage("Are you sure you want to exit this meeting?")
+                .setTitle("Cancel meeting")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        confirmDialog = builder.create();
+    }
+
+    private void initLayout(View view) {
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Next meeting");
+
+        wrapper = (RelativeLayout) view.findViewById(R.id.fragment_home_wrapper);
+        emptyRespnseMessageTextView = (TextView) view.findViewById(R.id.fragment_home_empty_textView);
 
         titleTextView = (TextView) view.findViewById(R.id.fragment_home_title_textView);
         locationTextView = (TextView) view.findViewById(R.id.fragment_home_location_textView);
         transportationButton = (FloatingActionMenu) view.findViewById(R.id.fragment_home_transportation_button);
         optionsButton = (FloatingActionMenu) view.findViewById(R.id.fragment_home_options_button);
+        transportationCar = (FloatingActionButton) view.findViewById(R.id.fragment_home_transportation_car_fab);
+        transportationBus = (FloatingActionButton) view.findViewById(R.id.fragment_home_transportation_bus_fab);
+        transportationWalk = (FloatingActionButton) view.findViewById(R.id.fragment_home_transportation_walk_fab);
+        postponeMeetingFab = (FloatingActionButton) view.findViewById(R.id.fragment_home_fab_postpone_meeting_button);
+        cancelMeetingFab = (FloatingActionButton) view.findViewById(R.id.fragment_home_fab_cancel_meeting_button);
         recyclerView = (RecyclerView) view.findViewById(R.id.fragment_home_participants_recyclerView);
 
         arcProgress = (ArcProgress) view.findViewById(R.id.fragment_home_progress_bar);
-//        arcProgress.setProgress(65);
-        arcProgress.setBottomText("ETA");
+//        arcProgress.setFinishedStrokeColor(R.color.colorAccent);
+//        arcProgress.setUnfinishedStrokeColor(R.color.fragment_home_top_text_color);
+        arcProgress.setProgress(10);
         arcProgress.setSuffixText("m");
 //        arcProgress.setDrawingCacheBackgroundColor(Color.WHITE);
 //        arcProgress.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 //        arcProgress.setTextColor(R.color.fragment_home_top_text_color);
-//        arcProgress.setFinishedStrokeColor(R.color.colorAccent);
-//        arcProgress.setUnfinishedStrokeColor(R.color.fragment_home_top_text_color);
+
+        transportationCar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onTransportationButtonsClicked(MeetingGetBody.TRANS_CAR);
+            }
+        });
+
+        transportationBus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onTransportationButtonsClicked(MeetingGetBody.TRANS_PUBLIC);
+            }
+        });
+
+        transportationWalk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onTransportationButtonsClicked(MeetingGetBody.TRANS_WALK);
+            }
+        });
+
+        postponeMeetingFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                optionsButton.close(true);
+            }
+        });
+
+        cancelMeetingFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                optionsButton.close(true);
+                confirmDialog.show();
+            }
+        });
 
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
         participantsList = new ArrayList<>();
-//        for(int i=0;i<3;i++) {
-//            MeetingGetBody.Participant newParticipant = new MeetingGetBody().new Participant(i, "Tudor Rotarus " + i, 30);
-//            participantsList.add(newParticipant);
-//        }
         participantsAdapter = new HomeParticipantsListAdapter(participantsList);
         recyclerView.setAdapter(participantsAdapter);
 
         getActivity().findViewById(R.id.fab).setVisibility(View.GONE);
 
-        int userId = SharedPreferencesManager.getInstance().readId(getContext());
-
+        userId = MySharedPreferencesManager.getInstance().readId(getContext());
         networkManager = NetworkManager.getInstance();
-        networkManager.getNextMeetingDetails(userId, this);
+    }
+
+    private void onTransportationButtonsClicked(int transMethod) {
+        if (userId == null) {
+            startActivity(new Intent(getActivity(), LoginNameActivity.class));
+            getActivity().finish();
+        }
+        if (meetingId != null) {
+            networkManager.updateTransportation(userId, meetingId, transMethod, this);
+            changeTransportationIcons(transMethod);
+        }
+    }
+
+    private void changeTransportationIcons(int transMethod) {
+        switch (transMethod) {
+            case MeetingGetBody.TRANS_CAR: {
+                transportationCar.setEnabled(false);
+                transportationBus.setEnabled(true);
+                transportationWalk.setEnabled(true);
+                break;
+            }
+            case MeetingGetBody.TRANS_PUBLIC: {
+                transportationCar.setEnabled(true);
+                transportationBus.setEnabled(false);
+                transportationWalk.setEnabled(true);
+                break;
+            }
+            case MeetingGetBody.TRANS_WALK: {
+                transportationCar.setEnabled(true);
+                transportationBus.setEnabled(true);
+                transportationWalk.setEnabled(false);
+                break;
+            }
+        }
+        if (transportationButton.isOpened()) {
+            transportationButton.close(true);
+        }
     }
 
     @Override
     public void onFetchMeetingDetailsSuccess(MeetingGetBody response) {
-        if(response.getEta() != null) {
+
+        SimpleDateFormat fromResponse = new SimpleDateFormat("yyyy-MM-dd H:mm:ss", Locale.US);
+        SimpleDateFormat toDate = new SimpleDateFormat("EEE, dd MMM yyyy, HH:mm", Locale.US);
+
+        wrapper.setVisibility(View.VISIBLE);
+        emptyRespnseMessageTextView.setVisibility(View.GONE);
+
+        meetingId = response.getId();
+        if (response.getEta() != null) {
             arcProgress.setProgress(response.getEta());
         }
+        currentTransportationMethod = response.getTransportationMethod();
+        changeTransportationIcons(response.getTransportationMethod());
         participantsAdapter.setParticipants(response.getParticipants());
         titleTextView.setText(response.getName());
-        locationTextView.setText(String.format("at %s - %s", response.getPlaceName(), response.getFromTime()));
+
+        Calendar fromTime = Calendar.getInstance();
+        try {
+            fromTime.setTime(fromResponse.parse(response.getFromTime()));
+        } catch (ParseException e) {
+            Log.e(TAG, "Could not parse date");
+        }
+
+        locationTextView.setText(String.format("at %s - %s", response.getPlaceName(), toDate.format(fromTime.getTime())));
         participantsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onFetchMeetingDetailsEmptyResponse() {
-
+        wrapper.setVisibility(View.GONE);
+        emptyRespnseMessageTextView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onFetchMeetingDetailsFailed() {
+        Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUpdateTransportationSuccess() {
+
+    }
+
+    @Override
+    public void onUpdateTransportationFailed() {
         Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
     }
 }

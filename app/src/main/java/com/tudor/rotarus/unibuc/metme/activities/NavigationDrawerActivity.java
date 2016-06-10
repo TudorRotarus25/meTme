@@ -1,10 +1,16 @@
 package com.tudor.rotarus.unibuc.metme.activities;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -12,6 +18,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -30,9 +37,7 @@ import com.tudor.rotarus.unibuc.metme.fragments.AllMeetingsFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.CalendarFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.FriendsFragment;
 import com.tudor.rotarus.unibuc.metme.fragments.HomeFragment;
-import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
-
-import static android.support.v4.app.ActivityCompat.requestPermissions;
+import com.tudor.rotarus.unibuc.metme.managers.MySharedPreferencesManager;
 
 public class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -41,11 +46,14 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
 
-    private SharedPreferencesManager sharedPreferencesManager;
+    private MySharedPreferencesManager sharedPreferencesManager;
 
     private FloatingActionMenu fam;
     private FloatingActionButton createMeetingFab;
     private FloatingActionButton createPickupFab;
+
+    private AlertDialog enableLocationAlertDialog;
+    private AlertDialog enableInternetAlertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +61,61 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
         checkAuthentication();
         checkPermissions();
+        checkGpsConnection();
+        checkInternetConnection();
         initLayout();
+    }
 
+    private void checkInternetConnection() {
+
+        AlertDialog.Builder internetBuilder = new AlertDialog.Builder(this);
+
+        internetBuilder.setMessage("This app is using internet to work properly. Please enable it for a better experience!")
+                .setTitle("Use internet?")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        enableInternetAlertDialog = internetBuilder.create();
+
+        ConnectivityManager cm = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return;
+        }
+        enableInternetAlertDialog.show();
+    }
+
+    private void checkGpsConnection() {
+
+        AlertDialog.Builder locationBuilder = new AlertDialog.Builder(this);
+        locationBuilder.setMessage("This app is using GPS to get your location. Please enable it for a better experience!")
+                .setTitle("Use location?")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        enableLocationAlertDialog = locationBuilder.create();
+
+        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (!enabled) {
+            enableLocationAlertDialog.show();
+        }
     }
 
     private void checkPermissions() {
@@ -82,9 +143,9 @@ public class NavigationDrawerActivity extends AppCompatActivity
     }
 
     private void checkAuthentication() {
-        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance();
+        MySharedPreferencesManager sharedPreferencesManager = MySharedPreferencesManager.getInstance();
         String token = sharedPreferencesManager.readToken(this);
-        if(token != null && !token.equals("")) {
+        if (token != null && !token.equals("")) {
             Log.i(TAG, token);
         } else {
             Intent intent = new Intent(NavigationDrawerActivity.this, LoginNameActivity.class);
@@ -95,7 +156,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
     private void initLayout() {
         setContentView(R.layout.activity_navigation_drawer);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_meeting_details_toolbar);
         setSupportActionBar(toolbar);
 
         fam = (FloatingActionMenu) findViewById(R.id.fab);
@@ -123,9 +184,10 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
         View header = navigationView.getHeaderView(0);
 
-        sharedPreferencesManager = SharedPreferencesManager.getInstance();
+        sharedPreferencesManager = MySharedPreferencesManager.getInstance();
         TextView drawerTitleTextView = (TextView) header.findViewById(R.id.drawer_nav_header_title);
         drawerTitleTextView.setText(sharedPreferencesManager.readFirstName(this) + " " + sharedPreferencesManager.readLastName(this));
+
     }
 
     @Override
@@ -189,7 +251,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
                 break;
         }
 
-        if(fragment != null) {
+        if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.navigation_drawer_fragment_container, fragment);
             ft.addToBackStack(null);

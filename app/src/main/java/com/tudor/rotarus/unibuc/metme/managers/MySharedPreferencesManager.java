@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 /**
  * Created by Tudor on 23.04.2016.
  */
-public class SharedPreferencesManager {
+public class MySharedPreferencesManager {
 
     private final String TAG = getClass().getSimpleName();
 
@@ -18,17 +18,19 @@ public class SharedPreferencesManager {
     private static final String PHONE_NUMBER = "phone_number";
     private static final String PHONE_PREFIX = "phone_prefix";
     private static final String TOKEN = "token";
+    private static final String REFRESH_TOKEN = "refresh_token";
     private static final String GCM_TOKEN = "gcm_token";
     private static final String SENT_GCM_TOKEN_TO_SERVER = "sent_gcm_token_to_server";
+    private static final String NOTIFICATION_COUNT = "notification_count";
 
-    private static SharedPreferencesManager instance;
+    private static MySharedPreferencesManager instance;
 
-    private SharedPreferencesManager() {
+    private MySharedPreferencesManager() {
     }
 
-    public static SharedPreferencesManager getInstance() {
+    public static MySharedPreferencesManager getInstance() {
         if(instance == null) {
-            instance = new SharedPreferencesManager();
+            instance = new MySharedPreferencesManager();
         }
         return instance;
     }
@@ -65,7 +67,14 @@ public class SharedPreferencesManager {
         SharedPreferences.Editor editor = getEditor(context);
 
         editor.putString(TOKEN, token);
-        editor.putBoolean(SENT_GCM_TOKEN_TO_SERVER, true);
+        editor.commit();
+    }
+
+    public void writeRefreshToken(Context context, String token) {
+
+        SharedPreferences.Editor editor = getEditor(context);
+
+        editor.putString(REFRESH_TOKEN, token);
         editor.commit();
     }
 
@@ -81,7 +90,16 @@ public class SharedPreferencesManager {
 
         SharedPreferences.Editor editor = getEditor(context);
 
+        editor.putBoolean(SENT_GCM_TOKEN_TO_SERVER, true);
         editor.putString(GCM_TOKEN, token);
+        editor.commit();
+    }
+
+    public void writeNotificationCount(Context context, int count) {
+
+        SharedPreferences.Editor editor = getEditor(context);
+
+        editor.putInt(NOTIFICATION_COUNT, count);
         editor.commit();
     }
 
@@ -140,6 +158,17 @@ public class SharedPreferencesManager {
         }
     }
 
+    public String readRefreshToken(Context context) {
+
+        SharedPreferences preferences = getSharedPreferences(context);
+
+        if(preferences.contains(REFRESH_TOKEN)) {
+            return preferences.getString(REFRESH_TOKEN, "");
+        } else {
+            return null;
+        }
+    }
+
     public String readGcmToken(Context context) {
 
         SharedPreferences preferences = getSharedPreferences(context);
@@ -158,6 +187,17 @@ public class SharedPreferencesManager {
             return preferences.getBoolean(SENT_GCM_TOKEN_TO_SERVER, false);
         }
         return false;
+    }
+
+    public int readNotificationCount(Context context) {
+
+        SharedPreferences preferences = getSharedPreferences(context);
+
+        if(preferences.contains(NOTIFICATION_COUNT)) {
+            return preferences.getInt(NOTIFICATION_COUNT, 1);
+        }
+        return 1;
+
     }
 
 }

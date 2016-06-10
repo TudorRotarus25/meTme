@@ -1,8 +1,6 @@
 package com.tudor.rotarus.unibuc.metme.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 
-import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
-import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
+import com.tudor.rotarus.unibuc.metme.managers.MySharedPreferencesManager;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.MeetingListListener;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingsListGetBody;
 
@@ -25,7 +22,7 @@ public class CalendarFragment extends Fragment implements MeetingListListener {
 
     private CalendarView calendarView;
 
-    private SharedPreferencesManager sharedPreferencesManager;
+    private MySharedPreferencesManager sharedPreferencesManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,14 +30,14 @@ public class CalendarFragment extends Fragment implements MeetingListListener {
 
         View view =  inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        init(view);
+        initLayout(view);
 
         return view;
     }
 
-    private void init(View view) {
+    private void initLayout(View view) {
 
-        sharedPreferencesManager = SharedPreferencesManager.getInstance();
+        sharedPreferencesManager = MySharedPreferencesManager.getInstance();
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Calendar");
 

@@ -13,11 +13,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.gcm.RegistrationIntentService;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
-import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
+import com.tudor.rotarus.unibuc.metme.managers.MySharedPreferencesManager;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.CountriesListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.LoginListener;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.get.CountryGetBody;
@@ -40,7 +39,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener, C
     private String lastName;
     private String phoneNumber;
 
-    private SharedPreferencesManager sharedPreferencesManager;
+    private MySharedPreferencesManager sharedPreferencesManager;
 
     public static final String LOGIN_EXTRA_PHONE_NUMBER = "LOGIN_EXTRA_PHONE_NUMBER";
 
@@ -55,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener, C
 
     public void initLayout(){
 
-        sharedPreferencesManager = SharedPreferencesManager.getInstance();
+        sharedPreferencesManager = MySharedPreferencesManager.getInstance();
 
         countryEditText = (EditText) findViewById(R.id.activity_login_editText_country);
         prefixEditText = (EditText) findViewById(R.id.activity_login_editText_country_prefix);

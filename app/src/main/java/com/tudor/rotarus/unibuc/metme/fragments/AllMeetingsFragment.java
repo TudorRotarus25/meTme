@@ -19,11 +19,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
+import com.tudor.rotarus.unibuc.metme.activities.MeetingDetailsActivity;
 import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
-import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
+import com.tudor.rotarus.unibuc.metme.managers.MySharedPreferencesManager;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.MeetingListListener;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingsListGetBody;
 import com.tudor.rotarus.unibuc.metme.views.adapters.AllMeetingsListAdapter;
@@ -43,7 +43,7 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
     private AllMeetingsListAdapter adapter;
     private ArrayList<MeetingsListGetBody.Meeting> meetingsList;
 
-    private SharedPreferencesManager sharedPreferencesManager;
+    private MySharedPreferencesManager sharedPreferencesManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_all_meetings, container, false);
 
-        init(v);
+        initLayout(v);
 
         return v;
     }
@@ -73,9 +73,9 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void init(final View v) {
+    private void initLayout(final View v) {
 
-        sharedPreferencesManager = SharedPreferencesManager.getInstance();
+        sharedPreferencesManager = MySharedPreferencesManager.getInstance();
 
         setHasOptionsMenu(true);
 
@@ -104,6 +104,14 @@ public class AllMeetingsFragment extends Fragment implements MeetingListListener
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new AllMeetingsListAdapter(new ArrayList<MeetingsListGetBody.Meeting>());
+        adapter.setOnAllMeetingsClickListener(new AllMeetingsListAdapter.AllMeetingsListListener() {
+            @Override
+            public void onClick(int meetingId) {
+                Intent intent = new Intent(getActivity(), MeetingDetailsActivity.class);
+                intent.putExtra(MeetingDetailsActivity.BUNDLE_MEETING_DETAILS_ID, meetingId);
+                getActivity().startActivity(intent);
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);

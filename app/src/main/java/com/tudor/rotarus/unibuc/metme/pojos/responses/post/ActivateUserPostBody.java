@@ -9,13 +9,15 @@ public class ActivateUserPostBody {
     String lastName;
     String phoneNumber;
     String token;
+    String refreshToken;
 
-    public ActivateUserPostBody(int id, String firstName, String lastName, String phoneNumber, String token) {
+    public ActivateUserPostBody(int id, String firstName, String lastName, String phoneNumber, String token, String refreshToken) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.token = token;
+        this.refreshToken = refreshToken;
     }
 
     public int getId() {
@@ -56,5 +58,13 @@ public class ActivateUserPostBody {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

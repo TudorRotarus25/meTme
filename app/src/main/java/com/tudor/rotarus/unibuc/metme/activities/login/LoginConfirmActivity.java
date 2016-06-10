@@ -8,11 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.activities.NavigationDrawerActivity;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
-import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
+import com.tudor.rotarus.unibuc.metme.managers.MySharedPreferencesManager;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.ActivateUserListener;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.post.ActivateUserPostBody;
 
@@ -21,7 +20,7 @@ public class LoginConfirmActivity extends AppCompatActivity implements ActivateU
     private EditText codeEditText;
     private Button continueButton;
 
-    private SharedPreferencesManager sharedPreferencesManager;
+    private MySharedPreferencesManager sharedPreferencesManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +32,7 @@ public class LoginConfirmActivity extends AppCompatActivity implements ActivateU
 
     private void initLayout() {
 
-        sharedPreferencesManager = SharedPreferencesManager.getInstance();
+        sharedPreferencesManager = MySharedPreferencesManager.getInstance();
 
         codeEditText = (EditText) findViewById(R.id.activity_login_confirm_editText_code);
         continueButton = (Button) findViewById(R.id.activity_login_confirm_button_ok);
@@ -66,6 +65,7 @@ public class LoginConfirmActivity extends AppCompatActivity implements ActivateU
     public void onActivateUserSuccess(ActivateUserPostBody response) {
 
         sharedPreferencesManager.writeToken(this, response.getToken());
+        sharedPreferencesManager.writeRefreshToken(this, response.getRefreshToken());
 
         Intent intent = new Intent(LoginConfirmActivity.this, NavigationDrawerActivity.class);
         startActivity(intent);

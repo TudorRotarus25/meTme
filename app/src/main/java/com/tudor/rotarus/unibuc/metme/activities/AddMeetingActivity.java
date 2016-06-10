@@ -25,11 +25,11 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.tudor.rotarus.unibuc.metme.MyApplication;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
-import com.tudor.rotarus.unibuc.metme.managers.SharedPreferencesManager;
+import com.tudor.rotarus.unibuc.metme.managers.MySharedPreferencesManager;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.CreateMeetingListener;
+import com.tudor.rotarus.unibuc.metme.pojos.responses.post.FriendsPostBody;
 import com.tudor.rotarus.unibuc.metme.views.dialogs.AddMeetingNotificationDialog;
 import com.tudor.rotarus.unibuc.metme.views.dialogs.AddMeetingParticipantsDialog;
 import com.tudor.rotarus.unibuc.metme.views.dialogs.AddMeetingTransportDialog;
@@ -42,7 +42,7 @@ import java.util.Locale;
 
 public class AddMeetingActivity extends AppCompatActivity implements OnConnectionFailedListener, CreateMeetingListener{
 
-    private static final String TAG = "AddMeetingActivity";
+    private final String TAG = getClass().getSimpleName();
     private static final int PLACE_PICKER_REQUEST = 1;
 
     private EditText nameEditText;
@@ -56,6 +56,7 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
     private TextView notificationText;
     private TextView meetingTypeText;
     private TextView addMembersText;
+    private TextView participantsText;
 
     private LinearLayout transportContainer;
     private LinearLayout notificationContainer;
@@ -87,6 +88,7 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
     private int transportMethod = 0;
     private int notifyTime = 15;
     private int meetingType = 0;
+    private ArrayList<Integer> participants;
 
 
     private void createMeeting() {
@@ -102,7 +104,7 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
             progressDialog.show();
 
             NetworkManager networkManager = NetworkManager.getInstance();
-            networkManager.createMeeting(name, callDateTimeFormatter.format(fromTime.getTime()), callDateTimeFormatter.format(toTime.getTime()), notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, getUserId(), meetingType, new ArrayList<Integer>(), this);
+            networkManager.createMeeting(name, callDateTimeFormatter.format(fromTime.getTime()), callDateTimeFormatter.format(toTime.getTime()), notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, getUserId(), meetingType, participants, this);
 
         } else {
             if(name.isEmpty()) {
@@ -152,11 +154,14 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
         notificationText = (TextView) findViewById(R.id.activity_add_meeting_notification_text);
         meetingTypeText = (TextView) findViewById(R.id.activity_add_meeting_type_text);
         addMembersText = (TextView) findViewById(R.id.activity_add_meeting_add_people_text);
+        participantsText = (TextView) findViewById(R.id.activity_add_meeting_participants_text);
 
         transportContainer = (LinearLayout) findViewById(R.id.activity_add_meeting_transport_container);
         notificationContainer = (LinearLayout) findViewById(R.id.activity_add_meeting_notification_container);
         meetingTypeContainer = (LinearLayout) findViewById(R.id.activity_add_meeting_type_container);
         addMembersContainer = (LinearLayout) findViewById(R.id.activity_add_meeting_add_people_container);
+
+        participants = new ArrayList<>();
 
         initPickers();
         initFields();
@@ -258,6 +263,23 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
             public void onClick(View v) {
                 AddMeetingParticipantsDialog dialog = AddMeetingParticipantsDialog.newInstance(null);
                 dialog.show(getFragmentManager(), TAG);
+                dialog.setOnDialogElementClick(new AddMeetingParticipantsDialog.MeetingParticipantDialogClick() {
+                    @Override
+                    public void onClick(FriendsPostBody.Friend friend) {
+                        if (participants.contains(friend.getId())) {
+                            participants.remove((Integer) friend.getId());
+                            String partText = participantsText.getText().toString();
+                            partText = partText.replace(friend.getName() + "   ", "");
+                            participantsText.setText(partText);
+                            Log.i(TAG, participants.toString());
+                        } else {
+                            participants.add(friend.getId());
+                            Log.i(TAG, participants.toString());
+                            String partText = participantsText.getText().toString();
+                            participantsText.setText(partText + friend.getName() + "   ");
+                        }
+                    }
+                });
             }
         });
     }
@@ -378,7 +400,7 @@ public class AddMeetingActivity extends AppCompatActivity implements OnConnectio
     }
 
     private int getUserId() {
-        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance();
+        MySharedPreferencesManager sharedPreferencesManager = MySharedPreferencesManager.getInstance();
         return sharedPreferencesManager.readId(this);
     }
 

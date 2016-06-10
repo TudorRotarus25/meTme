@@ -5,11 +5,16 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,18 +34,40 @@ import static android.support.v4.app.ActivityCompat.requestPermissions;
 /**
  * Created by Tudor on 29.02.2016.
  */
-public class MyApplication extends Application {
+public class MyApplication extends Application implements LocationListener {
 
     public final String TAG = this.getClass().getSimpleName();
 
     private static Context context;
+
+    private LocationManager locationManager;
+    private String provider;
+
+    private Double latitude;
+    private Double longitude;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         context = getApplicationContext();
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, false);
+        Location location = null;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            location = locationManager.getLastKnownLocation(provider);
+        }
+        if (location != null) {
+            Log.i(TAG, "Provider " + provider + " selected");
+            onLocationChanged(location);
+        } else {
+            Log.e(TAG, "Location is null");
+        }
     }
+
+
 
     public static Context getContext() {
         return context;
@@ -64,6 +91,37 @@ public class MyApplication extends Application {
             Log.e(TAG, "Friends refresh did not work");
         }
     };
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
 
     private class ContactsTask extends AsyncTask<Void, Void, FriendsBody> {
 

@@ -50,8 +50,9 @@ public class HomeParticipantsListAdapter extends RecyclerView.Adapter<HomePartic
     @Override
     public void onBindViewHolder(ParticipantsViewHolder holder, int position) {
         holder.nameTextView.setText(participants.get(position).getName());
+        holder.initialsTextView.setText(participants.get(position).getInitials());
         if (participants.get(position).getEta() != null) {
-            holder.etaTextView.setText(participants.get(position).getEta() + " m");
+            holder.etaTextView.setText(participants.get(position).getEta() + " min");
             holder.icon.setProgress((participants.get(position).getEta() * 6));
         }
     }
@@ -66,12 +67,14 @@ public class HomeParticipantsListAdapter extends RecyclerView.Adapter<HomePartic
         private CircleProgressView icon;
         private TextView nameTextView;
         private TextView etaTextView;
+        private TextView initialsTextView;
 
         public ParticipantsViewHolder(View itemView) {
             super(itemView);
             icon = (CircleProgressView) itemView.findViewById(R.id.list_home_participants_progress);
             nameTextView = (TextView) itemView.findViewById(R.id.list_home_participants_name_textView);
             etaTextView = (TextView) itemView.findViewById(R.id.list_home_participants_eta_textView);
+            initialsTextView = (TextView) itemView.findViewById(R.id.list_home_participants_progress_textView);
         }
     }
 }

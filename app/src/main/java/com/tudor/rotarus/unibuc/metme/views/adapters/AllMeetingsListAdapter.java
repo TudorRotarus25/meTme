@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tudor.rotarus.unibuc.metme.R;
@@ -17,6 +18,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import javax.security.auth.Subject;
+
 /**
  * Created by Tudor on 27.03.2016.
  */
@@ -24,13 +27,15 @@ public class AllMeetingsListAdapter extends RecyclerView.Adapter<AllMeetingsList
 
     private List<MeetingsListGetBody.Meeting> meetings;
 
+    private AllMeetingsListListener callback;
+
     private SimpleDateFormat fromResponse = new SimpleDateFormat("yyyy-MM-dd H:mm:ss", Locale.US);
     private SimpleDateFormat toDate = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.US);
     private SimpleDateFormat toTime = new SimpleDateFormat("HH:mm", Locale.US);
 
     public static class MeetingViewHolder extends RecyclerView.ViewHolder {
 
-        CardView cardView;
+        LinearLayout container;
         TextView name;
         TextView place;
         TextView date;
@@ -39,7 +44,7 @@ public class AllMeetingsListAdapter extends RecyclerView.Adapter<AllMeetingsList
 
         public MeetingViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView) itemView.findViewById(R.id.list_all_meetings_cardView);
+            container = (LinearLayout) itemView.findViewById(R.id.list_all_meetings_container);
             name = (TextView) itemView.findViewById(R.id.list_all_meetings_name_textView);
             place = (TextView) itemView.findViewById(R.id.list_all_meetings_place_textView);
             date = (TextView) itemView.findViewById(R.id.list_all_meetings_date_textView);
@@ -59,9 +64,9 @@ public class AllMeetingsListAdapter extends RecyclerView.Adapter<AllMeetingsList
     }
 
     @Override
-    public void onBindViewHolder(MeetingViewHolder holder, int position) {
+    public void onBindViewHolder(MeetingViewHolder holder, final int position) {
         holder.name.setText(meetings.get(position).getName());
-        holder.place.setText("at " + meetings.get(position).getPlaceName());
+        holder.place.setText(String.format("at %s", meetings.get(position).getPlaceName()));
 
         try {
 
@@ -74,6 +79,13 @@ public class AllMeetingsListAdapter extends RecyclerView.Adapter<AllMeetingsList
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onClick(meetings.get(position).getId());
+            }
+        });
     }
 
     @Override
@@ -96,5 +108,13 @@ public class AllMeetingsListAdapter extends RecyclerView.Adapter<AllMeetingsList
         } else {
             this.meetings = new ArrayList<>();
         }
+    }
+
+    public void setOnAllMeetingsClickListener(AllMeetingsListListener callback) {
+        this.callback = callback;
+    }
+
+    public interface AllMeetingsListListener {
+        void onClick(int meetingId);
     }
 }

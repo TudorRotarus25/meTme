@@ -57,12 +57,12 @@ public class FriendsFragment extends Fragment implements SearchView.OnQueryTextL
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_friends, container, false);
 
-        init(v);
+        initLayout(v);
 
         return v;
     }
 
-    private void init(View v) {
+    private void initLayout(View v) {
 
         setHasOptionsMenu(true);
 

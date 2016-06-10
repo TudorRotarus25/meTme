@@ -2,10 +2,14 @@ package com.tudor.rotarus.unibuc.metme.rest;
 
 import android.util.Log;
 
+import com.tudor.rotarus.unibuc.metme.MyApplication;
+import com.tudor.rotarus.unibuc.metme.managers.MySharedPreferencesManager;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -27,6 +31,23 @@ public class RestClient {
         logging.setLevel(HttpLoggingInterceptor.Level.NONE);
 
         OkHttpClient.Builder client = new OkHttpClient.Builder();
+        client.interceptors().add(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+
+                Request original = chain.request();
+
+                String token = MySharedPreferencesManager.getInstance().readToken(MyApplication.getContext());
+
+                if(token != null) {
+                    Request.Builder requestBuilder = original.newBuilder()
+                            .addHeader("X-Token", token);
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                }
+                return chain.proceed(original);
+            }
+        });
         client.interceptors().add(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {

@@ -15,6 +15,7 @@
         card_view:cardCornerRadius="4dp">
 
         <RelativeLayout
+            android:id="@+id/list_participants_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/all_meetings_cardView_padding_vertical"

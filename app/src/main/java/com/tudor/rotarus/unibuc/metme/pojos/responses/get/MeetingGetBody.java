@@ -7,21 +7,27 @@ import java.util.ArrayList;
  */
 public class MeetingGetBody {
 
+    public static final int TRANS_CAR = 0;
+    public static final int TRANS_PUBLIC = 1;
+    public static final int TRANS_WALK = 2;
+
     int id;
     String name;
     String fromTime;
     String toTime;
     String placeName;
+    String placeAddress;
     int transportationMethod;
     Integer eta;
     ArrayList<Participant> participants;
 
-    public MeetingGetBody(int id, String name, String fromTime, String toTime, String placeName, int transportationMethod, Integer eta, ArrayList<Participant> participants) {
+    public MeetingGetBody(int id, String name, String fromTime, String toTime, String placeName, String placeAddress, int transportationMethod, Integer eta, ArrayList<Participant> participants) {
         this.id = id;
         this.name = name;
         this.fromTime = fromTime;
         this.toTime = toTime;
         this.placeName = placeName;
+        this.placeAddress = placeAddress;
         this.transportationMethod = transportationMethod;
         this.eta = eta;
         this.participants = participants;
@@ -68,6 +74,14 @@ public class MeetingGetBody {
 
     public void setPlaceName(String placeName) {
         this.placeName = placeName;
+    }
+
+    public String getPlaceAddress() {
+        return placeAddress;
+    }
+
+    public void setPlaceAddress(String placeAddress) {
+        this.placeAddress = placeAddress;
     }
 
     public int getTransportationMethod() {
@@ -132,6 +146,22 @@ public class MeetingGetBody {
 
         public void setEta(Integer eta) {
             this.eta = eta;
+        }
+
+        public String getInitials() {
+            return initials;
+        }
+
+        public void setInitials(String initials) {
+            this.initials = initials;
+        }
+
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+
+        public void setPhoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
         }
     }
 

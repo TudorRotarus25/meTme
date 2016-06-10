@@ -34,6 +34,8 @@ public class AddMeetingParticipantsDialog extends DialogFragment implements Frie
 
     private int[] participantsIds;
 
+    private MeetingParticipantDialogClick callback;
+
     ArrayList<FriendsPostBody.Friend> participants;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -41,6 +43,11 @@ public class AddMeetingParticipantsDialog extends DialogFragment implements Frie
     private MeetingParticipantsDialogAdapter participantsAdapter;
 
     public AddMeetingParticipantsDialog() {
+    }
+
+    public void setOnDialogElementClick(MeetingParticipantDialogClick callback) {
+        Log.i(TAG, "setOnDialogElementClick");
+        this.callback = callback;
     }
 
     @Nullable
@@ -63,6 +70,15 @@ public class AddMeetingParticipantsDialog extends DialogFragment implements Frie
         participantsIds = getArguments().getIntArray(BUNDLE_PARTICIPANTS_IDS);
 
         participantsAdapter = new MeetingParticipantsDialogAdapter();
+        participantsAdapter.setOnMeetingParticipantClick(new MeetingParticipantsDialogAdapter.MeetingParticipantClickListener() {
+            @Override
+            public void onClick(FriendsPostBody.Friend friend) {
+                if(callback != null) {
+                    callback.onClick(friend);
+                    dismiss();
+                }
+            }
+        });
         recyclerView.setAdapter(participantsAdapter);
 
         dbManager = LocalDbManager.getInstance();
@@ -104,5 +120,9 @@ public class AddMeetingParticipantsDialog extends DialogFragment implements Frie
     @Override
     public void onFriendsDbGetFailed() {
         Toast.makeText(getActivity(), "Something went wrong with fetching friends. Try again please", Toast.LENGTH_LONG).show();
+    }
+
+    public interface MeetingParticipantDialogClick {
+        void onClick(FriendsPostBody.Friend friend);
     }
 }

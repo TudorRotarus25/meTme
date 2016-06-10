@@ -6,6 +6,7 @@
     tools:context=".fragments.HomeFragment">
 
     <RelativeLayout
+        android:id="@+id/fragment_home_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -58,7 +59,7 @@
                 android:layout_centerVertical="true"
                 android:layout_alignBottom="@+id/fragment_home_progress_bar"
                 android:layout_marginRight="10dp"
-                fab:menu_icon="@drawable/ic_directions_car_white_24dp"
+                fab:menu_icon="@drawable/ic_directions_white_24dp"
                 fab:menu_colorNormal="@color/colorAccent"
                 fab:menu_colorPressed="@color/colorAccentPressed"
                 fab:menu_labels_ellipsize="end"
@@ -69,25 +70,28 @@
                 fab:menu_fab_label="Transportation method">
 
                 <com.github.clans.fab.FloatingActionButton
-                    android:id="@+id/fragment_home_transportation_fab1"
+                    android:id="@+id/fragment_home_transportation_bus_fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:src="@drawable/ic_directions_bus_white_24dp"
                     fab:fab_size="mini"
                     fab:fab_colorNormal="@color/colorAccent"
                     fab:fab_colorPressed="@color/colorAccentPressed"/>
 
                 <com.github.clans.fab.FloatingActionButton
-                    android:id="@+id/fragment_home_transportation_fab2"
+                    android:id="@+id/fragment_home_transportation_walk_fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:src="@drawable/ic_directions_walk_white_24dp"
                     fab:fab_size="mini"
                     fab:fab_colorNormal="@color/colorAccent"
                     fab:fab_colorPressed="@color/colorAccentPressed"/>
 
                 <com.github.clans.fab.FloatingActionButton
-                    android:id="@+id/fragment_home_transportation_fab3"
+                    android:id="@+id/fragment_home_transportation_car_fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:src="@drawable/ic_directions_car_white_24dp"
                     fab:fab_size="mini"
                     fab:fab_colorNormal="@color/colorAccent"
                     fab:fab_colorPressed="@color/colorAccentPressed"/>
@@ -178,5 +182,15 @@
             android:layout_alignParentBottom="true"/>
 
     </RelativeLayout>
+
+    <TextView android:id="@+id/fragment_home_empty_textView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/fragment_all_meetings_horizontal_margin"
+        android:layout_marginRight="@dimen/fragment_all_meetings_horizontal_margin"
+        android:visibility="gone"
+        android:gravity="center"
+        android:textSize="@dimen/text_big"
+        android:text="@string/fragment_all_meetings_empty_text"/>
 
 </FrameLayout>

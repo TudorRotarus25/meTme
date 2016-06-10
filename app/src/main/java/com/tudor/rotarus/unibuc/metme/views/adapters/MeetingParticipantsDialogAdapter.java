@@ -1,12 +1,13 @@
 package com.tudor.rotarus.unibuc.metme.views.adapters;
 
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tudor.rotarus.unibuc.metme.R;
@@ -20,18 +21,21 @@ import java.util.List;
  */
 public class MeetingParticipantsDialogAdapter extends RecyclerView.Adapter<MeetingParticipantsDialogAdapter.ParticipantsViewHolder> {
 
+    private final String TAG = getClass().getSimpleName();
+
     private List<FriendsPostBody.Friend> contacts;
+    private MeetingParticipantClickListener callback;
 
     public static class ParticipantsViewHolder extends RecyclerView.ViewHolder {
 
-        private CardView cardView;
+        private RelativeLayout container;
         private ImageView icon;
         private TextView iconText;
         private TextView name;
 
         public ParticipantsViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView) itemView.findViewById(R.id.list_participants_cardView);
+            container = (RelativeLayout) itemView.findViewById(R.id.list_participants_container);
             icon = (ImageView) itemView.findViewById(R.id.list_participants_icon);
             iconText = (TextView) itemView.findViewById(R.id.list_participants_icon_inner_text);
             name = (TextView) itemView.findViewById(R.id.list_participants_name_textView);
@@ -65,10 +69,24 @@ public class MeetingParticipantsDialogAdapter extends RecyclerView.Adapter<Meeti
         }
     }
 
+    public void setOnMeetingParticipantClick(MeetingParticipantClickListener callback) {
+
+        Log.i(TAG, "setOnMeetingParticipantClick");
+        this.callback = callback;
+    }
+
     @Override
-    public void onBindViewHolder(ParticipantsViewHolder holder, int position) {
+    public void onBindViewHolder(ParticipantsViewHolder holder, final int position) {
         holder.name.setText(contacts.get(position).getName());
         holder.iconText.setText(contacts.get(position).getInitials());
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.onClick(contacts.get(position));
+                }
+            }
+        });
     }
 
     @Override
@@ -79,5 +97,9 @@ public class MeetingParticipantsDialogAdapter extends RecyclerView.Adapter<Meeti
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    public interface MeetingParticipantClickListener {
+        void onClick(FriendsPostBody.Friend friend);
     }
 }
