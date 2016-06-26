@@ -1,6 +1,7 @@
 package com.tudor.rotarus.unibuc.metme.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.tudor.rotarus.unibuc.metme.R;
+import com.tudor.rotarus.unibuc.metme.activities.AddPickupActivity;
 import com.tudor.rotarus.unibuc.metme.managers.LocalDbManager;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.db.FriendsDbListener;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.post.FriendsPostBody;
@@ -80,6 +82,15 @@ public class FriendsFragment extends Fragment implements SearchView.OnQueryTextL
 
         contactList = new ArrayList<>();
         adapter = new FriendsListAdapter(contactList);
+        adapter.setOnClickListener(new FriendsListAdapter.OnFriendsButtonClick() {
+            @Override
+            public void onClick(FriendsPostBody.Friend friend) {
+                Intent intent = new Intent(getActivity(), AddPickupActivity.class);
+                intent.putExtra(AddPickupActivity.BUNDLE_FRIEND_ID, friend.getId());
+                intent.putExtra(AddPickupActivity.BUNDLE_FRIEND_NAME, friend.getName());
+                startActivity(intent);
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);

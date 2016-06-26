@@ -56,7 +56,6 @@
                 android:layout_centerVertical="true"/>
 
             <TextView android:id="@+id/list_home_participants_eta_textView"
-                android:text="100 m"
                 android:textSize="@dimen/text_big"
                 android:maxLines="1"
                 android:layout_width="wrap_content"

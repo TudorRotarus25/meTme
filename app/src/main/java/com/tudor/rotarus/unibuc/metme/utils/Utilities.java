@@ -50,4 +50,34 @@ public class Utilities {
             return "";
         }
     }
+
+    public static String getPrettyDate(String stringDate) {
+
+        SimpleDateFormat fromResponse = new SimpleDateFormat("yyyy-MM-dd H:mm:ss", Locale.US);
+        SimpleDateFormat toDate = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.US);
+
+        Calendar dateTime = Calendar.getInstance();
+        try {
+            dateTime.setTime(fromResponse.parse(stringDate));
+            return toDate.format(dateTime.getTime());
+
+        } catch (ParseException e) {
+            return "";
+        }
+    }
+
+    public static String getPrettyTime(String stringDate) {
+
+        SimpleDateFormat fromResponse = new SimpleDateFormat("yyyy-MM-dd H:mm:ss", Locale.US);
+        SimpleDateFormat toDate = new SimpleDateFormat("HH:mm", Locale.US);
+
+        Calendar dateTime = Calendar.getInstance();
+        try {
+            dateTime.setTime(fromResponse.parse(stringDate));
+            return toDate.format(dateTime.getTime());
+
+        } catch (ParseException e) {
+            return "";
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.tudor.rotarus.unibuc.metme.views.adapters;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tudor.rotarus.unibuc.metme.R;
+import com.tudor.rotarus.unibuc.metme.activities.AddPickupActivity;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.post.FriendsPostBody;
 
 import java.util.ArrayList;
@@ -22,6 +24,12 @@ import java.util.List;
 public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.FriendsViewHolder> {
 
     private List<FriendsPostBody.Friend> contacts;
+
+    private OnFriendsButtonClick callback;
+
+    public void setOnClickListener(OnFriendsButtonClick callback) {
+        this.callback = callback;
+    }
 
     public static class FriendsViewHolder extends RecyclerView.ViewHolder {
 
@@ -65,9 +73,17 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(FriendsViewHolder holder, int position) {
+    public void onBindViewHolder(FriendsViewHolder holder, final int position) {
         holder.name.setText(contacts.get(position).getName());
         holder.iconText.setText(contacts.get(position).getInitials());
+        holder.pickMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(callback != null) {
+                    callback.onClick(contacts.get(position));
+                }
+            }
+        });
     }
 
     @Override
@@ -78,5 +94,9 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    public interface OnFriendsButtonClick {
+        void onClick(FriendsPostBody.Friend friend);
     }
 }

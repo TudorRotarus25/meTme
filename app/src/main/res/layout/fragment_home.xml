@@ -117,6 +117,17 @@
                 fab:menu_fab_label="Options">
 
                 <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/fragment_home_fab_finish_meeting_button"
+                    fab:fab_label="Finish meeting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_eject_white_24dp"
+                    fab:fab_size="mini"
+                    fab:fab_colorNormal="@color/colorAccent"
+                    fab:fab_colorPressed="@color/colorAccentPressed"
+                    android:visibility="gone"/>
+
+                <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/fragment_home_fab_cancel_meeting_button"
                     fab:fab_label="Cancel meeting"
                     android:layout_width="wrap_content"

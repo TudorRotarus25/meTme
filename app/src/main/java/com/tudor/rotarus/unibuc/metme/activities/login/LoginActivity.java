@@ -73,7 +73,9 @@ public class LoginActivity extends AppCompatActivity implements LoginListener, C
                 if (!prefix.isEmpty() && !phoneNumber.isEmpty() && phoneNumber.matches("[0-9]+")) {
                     phoneNumber = prefix + phoneNumber;
 
-                    createUser(phoneNumber, firstName, lastName);
+                    NetworkManager networkManager = NetworkManager.getInstance();
+                    networkManager.login(phoneNumber, firstName, lastName, LoginActivity.this);
+
                 } else {
                     if (prefix.isEmpty()) {
                         prefixEditText.setError("Country prefix is required");
@@ -86,13 +88,6 @@ public class LoginActivity extends AppCompatActivity implements LoginListener, C
                 }
             }
         });
-    }
-
-    private void createUser(final String phoneNumber, final String firstName, final String lastName) {
-
-        NetworkManager networkManager = NetworkManager.getInstance();
-        networkManager.login(phoneNumber, firstName, lastName, this);
-
     }
 
     public void populateCountryFields(){

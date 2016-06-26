@@ -18,6 +18,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.tudor.rotarus.unibuc.metme.R;
 import com.tudor.rotarus.unibuc.metme.activities.AcceptMeetingActivity;
+import com.tudor.rotarus.unibuc.metme.activities.MeetingDetailsActivity;
 import com.tudor.rotarus.unibuc.metme.activities.NavigationDrawerActivity;
 import com.tudor.rotarus.unibuc.metme.managers.MySharedPreferencesManager;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
@@ -34,6 +35,7 @@ public class GcmMessageHandler extends GcmListenerService implements RefreshLoca
     private final int NOTIFICATION_TYPE_MEETING_COMING_UP = 1;
     private final int NOTIFICATION_TYPE_NEW_MEETING = 2;
     private final int NOTIFICATION_TYPE_REFRESH_ETA = 3;
+    private final int NOTIFICATION_TYPE_INFORMATION = 4;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -70,6 +72,11 @@ public class GcmMessageHandler extends GcmListenerService implements RefreshLoca
             case NOTIFICATION_TYPE_REFRESH_ETA:
                 refreshETA(body.getMeetingId());
                 break;
+            case NOTIFICATION_TYPE_INFORMATION:
+                Intent informationNotificationIntent = new Intent(getBaseContext(), MeetingDetailsActivity.class);
+                informationNotificationIntent.putExtra(MeetingDetailsActivity.BUNDLE_MEETING_DETAILS_ID, body.getMeetingId());
+                createNotification(body, informationNotificationIntent);
+                break;
             default:
                 Log.e(TAG, "Notification type not supported");
                 break;
@@ -79,7 +86,8 @@ public class GcmMessageHandler extends GcmListenerService implements RefreshLoca
     private void createNotification(PushNotificationBody body, Intent notificationIntent) {
         Context context = getBaseContext();
 
-        PendingIntent contentIntent = PendingIntent.getActivity(context, body.getNotificationId(), notificationIntent, Intent.FILL_IN_DATA);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, body.getNotificationId(), notificationIntent,
+                Intent.FILL_IN_DATA);
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         long[] vibrate = {0, 100, 200, 300};
@@ -93,7 +101,8 @@ public class GcmMessageHandler extends GcmListenerService implements RefreshLoca
                 .setVibrate(vibrate)
                 .setAutoCancel(true);
 
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(
+                Context.NOTIFICATION_SERVICE);
         notificationManager.notify(body.getNotificationId(), builder.build());
     }
 

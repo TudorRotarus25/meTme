@@ -50,6 +50,10 @@ public interface RestAPI {
     Call<Void> createMeeting(@Field("name") String name, @Field("from_time") String fromTime, @Field("to_time") String toTime, @Field("notify_time") int notifyTime, @Field("place_lat") Double placeLat, @Field("place_lon") Double placeLon, @Field("place_name") String placeName, @Field("place_address") String placeAddress, @Field("transportation_method") int transportationMethod, @Field("author_id") int authorId, @Field("type") int type, @Field("members") String members);
 
     @FormUrlEncoded
+    @POST("meetings/create_pickup")
+    Call<Void> createPickup(@Field("name") String name, @Field("place_lat") Double placeLat, @Field("place_lon") Double placeLon, @Field("place_name") String placeName, @Field("place_address") String placeAddress, @Field("transportation_method") int transportationMethod, @Field("author_id") int authorId, @Field("type") int type, @Field("members") String members, @Field("author_lat") Double authorLat, @Field("author_lon") Double authorLon);
+
+    @FormUrlEncoded
     @POST("meetings/update/transportation")
     Call<Void> updateTransportation(@Field("user_id") int userId, @Field("meeting_id") int meetingId, @Field("transportation_method") int transportationMethod);
 
@@ -77,6 +81,10 @@ public interface RestAPI {
     @FormUrlEncoded
     @POST("meetings/finish")
     Call<Void> finishMeeting(@Field("user_id") int userId, @Field("meeting_id") int meetingId);
+
+    @FormUrlEncoded
+    @POST("meetings/postpone")
+    Call<Void> postponeMeeting(@Field("user_id") int userId, @Field("meeting_id") int meetingId, @Field("time") int time);
 
     @FormUrlEncoded
     @POST("gcm/refresh")

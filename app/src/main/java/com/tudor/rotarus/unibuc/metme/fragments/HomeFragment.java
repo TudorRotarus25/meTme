@@ -20,13 +20,18 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.tudor.rotarus.unibuc.metme.R;
+import com.tudor.rotarus.unibuc.metme.activities.NavigationDrawerActivity;
 import com.tudor.rotarus.unibuc.metme.activities.login.LoginNameActivity;
 import com.tudor.rotarus.unibuc.metme.managers.NetworkManager;
 import com.tudor.rotarus.unibuc.metme.managers.MySharedPreferencesManager;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.CancelMeetingListener;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.FinishMeetingListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.MeetingDetailsListener;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.PostponeMeetingListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.UpdateTransportationListener;
 import com.tudor.rotarus.unibuc.metme.pojos.responses.get.MeetingGetBody;
 import com.tudor.rotarus.unibuc.metme.views.adapters.HomeParticipantsListAdapter;
+import com.tudor.rotarus.unibuc.metme.views.dialogs.PostponeMeetingDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class HomeFragment extends Fragment implements MeetingDetailsListener, UpdateTransportationListener {
+public class HomeFragment extends Fragment implements MeetingDetailsListener, UpdateTransportationListener, CancelMeetingListener, FinishMeetingListener, PostponeMeetingListener {
 
     private final String TAG = getClass().getSimpleName();
 
@@ -48,6 +53,7 @@ public class HomeFragment extends Fragment implements MeetingDetailsListener, Up
     private FloatingActionButton transportationCar;
     private FloatingActionButton transportationBus;
     private FloatingActionButton transportationWalk;
+    private FloatingActionButton finishMeetingFab;
     private FloatingActionButton postponeMeetingFab;
     private FloatingActionButton cancelMeetingFab;
     private ArcProgress arcProgress;
@@ -60,7 +66,8 @@ public class HomeFragment extends Fragment implements MeetingDetailsListener, Up
     private Integer meetingId;
     private int currentTransportationMethod;
 
-    private AlertDialog confirmDialog;
+    private AlertDialog cancelConfirmDialog;
+    private AlertDialog finishConfirmDialog;
 
     private NetworkManager networkManager;
 
@@ -95,14 +102,14 @@ public class HomeFragment extends Fragment implements MeetingDetailsListener, Up
 
     private void initDialogs() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder cancelBuilder = new AlertDialog.Builder(getActivity());
 
-        builder.setMessage("Are you sure you want to exit this meeting?")
+        cancelBuilder.setMessage("Are you sure you want to exit this meeting?")
                 .setTitle("Cancel meeting")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        networkManager.cancelMeeting(userId, meetingId, HomeFragment.this);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -111,7 +118,26 @@ public class HomeFragment extends Fragment implements MeetingDetailsListener, Up
 
                     }
                 });
-        confirmDialog = builder.create();
+        cancelConfirmDialog = cancelBuilder.create();
+
+        AlertDialog.Builder finishBuilder = new AlertDialog.Builder(getActivity());
+
+        finishBuilder.setMessage("Are you sure you want to finish this meeting? This will remove it from the other participants as well")
+                .setTitle("Finish meeting")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        networkManager.finishMeeting(userId, meetingId, HomeFragment.this);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        finishConfirmDialog = finishBuilder.create();
     }
 
     private void initLayout(View view) {
@@ -128,6 +154,7 @@ public class HomeFragment extends Fragment implements MeetingDetailsListener, Up
         transportationCar = (FloatingActionButton) view.findViewById(R.id.fragment_home_transportation_car_fab);
         transportationBus = (FloatingActionButton) view.findViewById(R.id.fragment_home_transportation_bus_fab);
         transportationWalk = (FloatingActionButton) view.findViewById(R.id.fragment_home_transportation_walk_fab);
+        finishMeetingFab = (FloatingActionButton) view.findViewById(R.id.fragment_home_fab_finish_meeting_button);
         postponeMeetingFab = (FloatingActionButton) view.findViewById(R.id.fragment_home_fab_postpone_meeting_button);
         cancelMeetingFab = (FloatingActionButton) view.findViewById(R.id.fragment_home_fab_cancel_meeting_button);
         recyclerView = (RecyclerView) view.findViewById(R.id.fragment_home_participants_recyclerView);
@@ -162,10 +189,26 @@ public class HomeFragment extends Fragment implements MeetingDetailsListener, Up
             }
         });
 
+        finishMeetingFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                optionsButton.close(true);
+                finishConfirmDialog.show();
+            }
+        });
+
         postponeMeetingFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 optionsButton.close(true);
+                PostponeMeetingDialog dialog = PostponeMeetingDialog.newInstance();
+                dialog.setOnClickListener(new PostponeMeetingDialog.PostponeMeetingOnClick() {
+                    @Override
+                    public void onClick(int number) {
+                        networkManager.postponeMeeting(userId, meetingId, number, HomeFragment.this);
+                    }
+                });
+                dialog.show(getActivity().getFragmentManager(), TAG);
             }
         });
 
@@ -173,7 +216,7 @@ public class HomeFragment extends Fragment implements MeetingDetailsListener, Up
             @Override
             public void onClick(View v) {
                 optionsButton.close(true);
-                confirmDialog.show();
+                cancelConfirmDialog.show();
             }
         });
 
@@ -237,6 +280,12 @@ public class HomeFragment extends Fragment implements MeetingDetailsListener, Up
         wrapper.setVisibility(View.VISIBLE);
         emptyRespnseMessageTextView.setVisibility(View.GONE);
 
+        if(response.getAuthorId() == userId) {
+            finishMeetingFab.setVisibility(View.VISIBLE);
+        } else {
+            finishMeetingFab.setVisibility(View.GONE);
+        }
+
         meetingId = response.getId();
         if (response.getEta() != null) {
             arcProgress.setProgress(response.getEta());
@@ -275,6 +324,36 @@ public class HomeFragment extends Fragment implements MeetingDetailsListener, Up
 
     @Override
     public void onUpdateTransportationFailed() {
+        Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCancelMeetingSuccess() {
+        startActivity(new Intent(getActivity(), NavigationDrawerActivity.class));
+    }
+
+    @Override
+    public void onCancelMeetingFailed() {
+        Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFinishMeetingSuccess() {
+        startActivity(new Intent(getActivity(), NavigationDrawerActivity.class));
+    }
+
+    @Override
+    public void onFinishMeetingFailed() {
+        Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPostponeMeetingSuccess() {
+        startActivity(new Intent(getActivity(), NavigationDrawerActivity.class));
+    }
+
+    @Override
+    public void onPostponeMeetingFailed() {
         Toast.makeText(getContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
     }
 }

@@ -4,11 +4,13 @@ import android.util.Log;
 
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.AcceptMeetingListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.CancelMeetingListener;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.CreatePickupListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.DeleteMeetingListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.EditUserListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.FinishMeetingListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.GetProfileListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.MeetingDetailsListener;
+import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.PostponeMeetingListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.RefreshLocationListener;
 import com.tudor.rotarus.unibuc.metme.pojos.interfaces.network.UpdateTransportationListener;
 import com.tudor.rotarus.unibuc.metme.pojos.requests.FriendsBody;
@@ -199,7 +201,6 @@ public class NetworkManager {
     }
 
     public void createMeeting(String name, String fromTime, String toTime, int notifyTime, Double locationLat, Double locationLon, String locationName, String locationAddress, int transportMethod, int authorId, int meetingType, ArrayList<Integer> members, final CreateMeetingListener callback) {
-        // TODO: add members, hardcoded type
         Call<Void> createMeetingCall = requestAPI.createMeeting(name, fromTime, toTime, notifyTime, locationLat, locationLon, locationName, locationAddress, transportMethod, authorId, meetingType, members.toString());
         createMeetingCall.enqueue(new Callback<Void>() {
             @Override
@@ -216,6 +217,27 @@ public class NetworkManager {
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e(TAG, t.getMessage());
                 callback.onCreateMeetingFailed();
+            }
+        });
+    }
+
+    public void createPickup(String name, Double locationLat, Double locationLon, String locationName, String locationAddress, int transportMethod, int authorId, int meetingType, ArrayList<Integer> members, Double authorLat, Double authorLon, final CreatePickupListener callback) {
+        Call<Void> call = requestAPI.createPickup(name, locationLat, locationLon, locationName, locationAddress, transportMethod, authorId, meetingType, members.toString(), authorLat, authorLon);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response != null && response.code() == 200) {
+                    callback.onCreatePickupSuccess();
+                } else {
+                    Log.e(TAG, "Create pickup failed: " + (response != null ? response.code() : "null response"));
+                    callback.onCreatePickupFailed();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e(TAG, t.getMessage());
+                callback.onCreatePickupFailed();
             }
         });
     }
@@ -273,14 +295,14 @@ public class NetworkManager {
                 if (response != null && response.body() != null && response.code() == 200) {
                     callback.onFetchMeetingDetailsSuccess(response.body());
                 } else {
-                    Log.e(TAG, "getNextMeetingDetails failed: " + (response != null ? response.code() : "null response"));
+                    Log.e(TAG, "getMeetingDetails failed: " + (response != null ? response.code() : "null response"));
                     callback.onFetchMeetingDetailsFailed();
                 }
             }
 
             @Override
             public void onFailure(Call<MeetingGetBody> call, Throwable t) {
-                Log.e(TAG, "getNextMeetingDetails failed: " + t.getMessage());
+                Log.e(TAG, "getMeetingDetails failed: " + t.getMessage());
                 callback.onFetchMeetingDetailsFailed();
             }
         });
@@ -389,6 +411,27 @@ public class NetworkManager {
             public void onFailure(Call<Void> call, Throwable t) {
                 callback.onFinishMeetingFailed();
                 Log.e(TAG, "finishMeeting failed: " + t.getMessage());
+            }
+        });
+    }
+
+    public void postponeMeeting(int userId, int meetingId, int time, final PostponeMeetingListener callback) {
+        Call<Void> call = requestAPI.postponeMeeting(userId, meetingId, time);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response != null && response.code() == 200) {
+                    callback.onPostponeMeetingSuccess();
+                } else {
+                    callback.onPostponeMeetingFailed();
+                    Log.e(TAG, "postponeMeeting failed: " + (response != null ? response.code() : "null response"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                callback.onPostponeMeetingFailed();
+                Log.e(TAG, "postponeMeeting failed: " + t.getMessage());
             }
         });
     }

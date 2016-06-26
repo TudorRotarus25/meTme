@@ -88,7 +88,9 @@
             android:name=".gcm.RegistrationIntentService"
             android:exported="false" />
 
-        <activity android:name=".activities.AcceptMeetingActivity"></activity>
+        <activity android:name=".activities.AcceptMeetingActivity" />
+        <activity android:name=".activities.AddPickupActivity" />
+        <activity android:name=".activities.NotificationsActivity"></activity>
     </application>
 
 </manifest>

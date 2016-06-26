@@ -45,6 +45,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
     private static final String TAG = "NavigationDrawerActivity";
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+    private static final int PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 101;
 
     private MySharedPreferencesManager sharedPreferencesManager;
 
@@ -126,6 +127,11 @@ public class NavigationDrawerActivity extends AppCompatActivity
         } else {
             ((MyApplication) getApplication()).refreshFriendList();
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+        }
     }
 
     @Override
@@ -186,7 +192,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
         sharedPreferencesManager = MySharedPreferencesManager.getInstance();
         TextView drawerTitleTextView = (TextView) header.findViewById(R.id.drawer_nav_header_title);
-        drawerTitleTextView.setText(sharedPreferencesManager.readFirstName(this) + " " + sharedPreferencesManager.readLastName(this));
+        drawerTitleTextView.setText(String.format("%s %s", sharedPreferencesManager.readFirstName(this), sharedPreferencesManager.readLastName(this)));
 
     }
 

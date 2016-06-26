@@ -13,12 +13,15 @@ public class MeetingGetBody {
 
     int id;
     String name;
+    Integer type;
     String fromTime;
     String toTime;
     String placeName;
     String placeAddress;
     int transportationMethod;
     Integer eta;
+    Integer notifyTime;
+    Integer authorId;
     ArrayList<Participant> participants;
 
     public MeetingGetBody(int id, String name, String fromTime, String toTime, String placeName, String placeAddress, int transportationMethod, Integer eta, ArrayList<Participant> participants) {
@@ -30,6 +33,48 @@ public class MeetingGetBody {
         this.placeAddress = placeAddress;
         this.transportationMethod = transportationMethod;
         this.eta = eta;
+        this.participants = participants;
+    }
+
+    public MeetingGetBody(int id, String name, String fromTime, String toTime, String placeName, String placeAddress, int transportationMethod, Integer eta, Integer notifyTime, ArrayList<Participant> participants) {
+        this.id = id;
+        this.name = name;
+        this.fromTime = fromTime;
+        this.toTime = toTime;
+        this.placeName = placeName;
+        this.placeAddress = placeAddress;
+        this.transportationMethod = transportationMethod;
+        this.eta = eta;
+        this.notifyTime = notifyTime;
+        this.participants = participants;
+    }
+
+    public MeetingGetBody(int id, String name, Integer type, String fromTime, String toTime, String placeName, String placeAddress, int transportationMethod, Integer eta, Integer notifyTime, ArrayList<Participant> participants) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.fromTime = fromTime;
+        this.toTime = toTime;
+        this.placeName = placeName;
+        this.placeAddress = placeAddress;
+        this.transportationMethod = transportationMethod;
+        this.eta = eta;
+        this.notifyTime = notifyTime;
+        this.participants = participants;
+    }
+
+    public MeetingGetBody(Integer authorId, int id, String name, Integer type, String fromTime, String toTime, String placeName, String placeAddress, int transportationMethod, Integer eta, Integer notifyTime, ArrayList<Participant> participants) {
+        this.authorId = authorId;
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.fromTime = fromTime;
+        this.toTime = toTime;
+        this.placeName = placeName;
+        this.placeAddress = placeAddress;
+        this.transportationMethod = transportationMethod;
+        this.eta = eta;
+        this.notifyTime = notifyTime;
         this.participants = participants;
     }
 
@@ -50,6 +95,14 @@ public class MeetingGetBody {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getFromTime() {
@@ -98,6 +151,22 @@ public class MeetingGetBody {
 
     public void setEta(Integer eta) {
         this.eta = eta;
+    }
+
+    public Integer getNotifyTime() {
+        return notifyTime;
+    }
+
+    public void setNotifyTime(int notifyTime) {
+        this.notifyTime = notifyTime;
+    }
+
+    public Integer getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(Integer authorId) {
+        this.authorId = authorId;
     }
 
     public ArrayList<Participant> getParticipants() {

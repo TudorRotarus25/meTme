@@ -32,7 +32,6 @@
         android:inputType="number"
         android:singleLine="true"
         android:imeOptions="actionDone"
-        android:maxLength="4"
         android:paddingTop="@dimen/edit_text_padding_vertical"
         android:paddingBottom="@dimen/edit_text_padding_vertical"
         android:paddingLeft="@dimen/edit_text_padding_horizontal"

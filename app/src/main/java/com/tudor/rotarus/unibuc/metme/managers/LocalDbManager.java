@@ -37,6 +37,7 @@ public class LocalDbManager {
     private class FriendsTask extends AsyncTask<Void, Void, FriendsPostBody> {
 
         private Context context;
+        private DatabaseHelper db;
         private FriendsDbListener callback;
 
         public FriendsTask(Context context, FriendsDbListener callback) {
@@ -47,7 +48,7 @@ public class LocalDbManager {
         @Override
         protected FriendsPostBody doInBackground(Void... params) {
 
-            DatabaseHelper db = new DatabaseHelper(context);
+            db = new DatabaseHelper(context);
             return db.getAllFriends();
         }
 
@@ -61,6 +62,8 @@ public class LocalDbManager {
                 Log.e(TAG, "Null response when getting all friends from local DB");
                 callback.onFriendsDbGetFailed();
             }
+
+            db.close();
         }
     }
 

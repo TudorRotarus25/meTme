@@ -10,7 +10,7 @@ public class MySharedPreferencesManager {
 
     private final String TAG = getClass().getSimpleName();
 
-    public static final String METME_SHARED_PREFERENCES = "METME_SHARED_PREFERENCES_FIRST_NAME";
+    public static final String METME_SHARED_PREFERENCES = "METME_SHARED_PREFERENCES";
 
     private static final String ID = "_id";
     private static final String FIRST_NAME = "first_name";
@@ -21,7 +21,6 @@ public class MySharedPreferencesManager {
     private static final String REFRESH_TOKEN = "refresh_token";
     private static final String GCM_TOKEN = "gcm_token";
     private static final String SENT_GCM_TOKEN_TO_SERVER = "sent_gcm_token_to_server";
-    private static final String NOTIFICATION_COUNT = "notification_count";
 
     private static MySharedPreferencesManager instance;
 
@@ -92,14 +91,6 @@ public class MySharedPreferencesManager {
 
         editor.putBoolean(SENT_GCM_TOKEN_TO_SERVER, true);
         editor.putString(GCM_TOKEN, token);
-        editor.commit();
-    }
-
-    public void writeNotificationCount(Context context, int count) {
-
-        SharedPreferences.Editor editor = getEditor(context);
-
-        editor.putInt(NOTIFICATION_COUNT, count);
         editor.commit();
     }
 
@@ -187,17 +178,6 @@ public class MySharedPreferencesManager {
             return preferences.getBoolean(SENT_GCM_TOKEN_TO_SERVER, false);
         }
         return false;
-    }
-
-    public int readNotificationCount(Context context) {
-
-        SharedPreferences preferences = getSharedPreferences(context);
-
-        if(preferences.contains(NOTIFICATION_COUNT)) {
-            return preferences.getInt(NOTIFICATION_COUNT, 1);
-        }
-        return 1;
-
     }
 
 }
